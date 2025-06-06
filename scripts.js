@@ -10,8 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const heroSection = document.querySelector('.hero-section');
-    const glitchText = document.querySelector('.glitch-text');
-    const interactiveElements = document.querySelectorAll('.logo-heading');
+    const galleryContainer = document.querySelector('.gallery-container');
+    const leftGroup = document.querySelector('.left-group');
+    const rightGroup = document.querySelector('.right-group');
+    const glitchElements = document.querySelectorAll('.glitch-text, .social-icon, .social-button');
+    const interactiveElements = document.querySelectorAll('.image-frame, .logo-heading, .social-icon, .social-button');
 
     //----------------------------------------------------
     // HIỆU ỨNG CON TRỎ CHUỘT TÙY CHỈNH
@@ -33,14 +36,14 @@ document.addEventListener('DOMContentLoaded', function() {
     //----------------------------------------------------
     // HIỆU ỨNG GLITCH TƯƠNG TÁC
     //----------------------------------------------------
-    if (glitchText) {
-        glitchText.addEventListener('mouseenter', () => {
-            glitchText.classList.add('intensify');
+    glitchElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            el.classList.add('intensify');
         });
-        glitchText.addEventListener('mouseleave', () => {
-            glitchText.classList.remove('intensify');
+        el.addEventListener('mouseleave', () => {
+            el.classList.remove('intensify');
         });
-    }
+    });
 
     //----------------------------------------------------
     // HIỆU ỨNG PARALLAX KHI CUỘN
@@ -53,6 +56,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (heroSection && scrolled < window.innerHeight) {
             const rate = scrolled * 0.4;
             heroSection.style.transform = `translateY(${rate}px)`;
+        }
+
+        if (galleryContainer && leftGroup && rightGroup) {
+            const galleryRect = galleryContainer.getBoundingClientRect();
+            if (galleryRect.top < window.innerHeight && galleryRect.bottom > 0) {
+                const scrollPercent = (window.innerHeight - galleryRect.top) / (window.innerHeight + galleryRect.height);
+                const moveAmount = scrollPercent * 100 - 50;
+                leftGroup.style.transform = `translateY(${moveAmount * 0.5}px)`;
+                rightGroup.style.transform = `translateY(${-moveAmount * 0.5}px)`;
+            }
         }
 
         ticking = false;
