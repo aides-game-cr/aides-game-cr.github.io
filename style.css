@@ -257,10 +257,13 @@ body::after {
 }
 
 .social-icon {
-    width: 24px;
-    height: 24px;
-    background-size: cover;
-    transition: transform 0.3s ease;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
 .facebook-icon {
