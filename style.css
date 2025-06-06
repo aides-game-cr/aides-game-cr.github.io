@@ -13,8 +13,8 @@ body {
     background: #000000;
     color: #ffffff;
     font-family: 'Montserrat', sans-serif;
-    overflow: hidden;
-    /* Khóa scroll */
+    overflow-x: hidden;
+    /* Sửa để cho phép cuộn dọc nếu cần */
     position: relative;
 }
 
@@ -175,6 +175,9 @@ body::after {
     transform: translateY(50px);
     animation: heroFadeIn 2s ease-out 0.5s forwards;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .logo-heading {
@@ -202,8 +205,103 @@ body::after {
     color: #cccccc;
     opacity: 0;
     animation: subtitleFadeIn 2s ease-out 1.5s forwards;
+    margin-bottom: 2rem;
 }
 
+/* === SOCIAL BUTTONS === */
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.social-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #ffffff;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.social-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.facebook-button {
+    border-color: #3b5998;
+}
+
+.facebook-button:hover {
+    background: rgba(59, 89, 152, 0.3);
+}
+
+.instagram-button {
+    border-color: #e1306c;
+}
+
+.instagram-button:hover {
+    background: rgba(225, 48, 108, 0.3);
+}
+
+.social-icon {
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    transition: transform 0.3s ease;
+}
+
+.facebook-icon {
+    background-image: url('facebook-icon.png');
+}
+
+.instagram-icon {
+    background-image: url('Instagram-icon.png');
+}
+
+.social-button:hover .social-icon {
+    transform: scale(1.2);
+}
+
+/* === MATRIX TEXT === */
+.matrix {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.matrix-item {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.matrix-text {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #00ff80;
+    /* Màu xanh lá cây giống Matrix Rain */
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+}
+
+.matrix-text:hover {
+    transform: scale(1.1);
+    text-shadow: 0 0 20px rgba(0, 255, 128, 0.8);
+}
 
 /* === FOOTER === */
 .footer {
@@ -215,12 +313,6 @@ body::after {
     color: #cccccc;
     opacity: 0;
     animation: fadeIn 2s ease-out 1s forwards;
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
 }
 
 /* === ANIMATIONS === */
@@ -246,5 +338,29 @@ body::after {
 
     50% {
         background-position: 100% 50%;
+    }
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .social-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .social-button {
+        width: 80%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .matrix-item {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
