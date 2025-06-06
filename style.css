@@ -360,6 +360,7 @@ body::after {
         width: 80%;
         max-width: 300px;
         margin: 0 auto;
+        justify-content: center;
     }
 
     .matrix-item {
