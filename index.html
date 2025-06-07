@@ -1,53 +1,105 @@
-<DOCUMENT filename="index.html">
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AIDES - Endless Creativity</title>
-        <link rel="stylesheet" href="style.css">
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <link rel="icon" type="image/svg+xml"
-            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>AIDES</text></svg>">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDES - Endless Creativity</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>AIDES</text></svg>">
+</head>
 
+<body>
+    <!-- Loader -->
+    <div class="loader">
+        <div class="loader-text">AIDES LOADING</div>
+        <div class="progress-bar"></div>
+    </div>
 
-    <body>
-        <div class="loader">
-            <div class="loader-text">AIDES LOADING</div>
-            <div class="progress-bar"></div>
-        </div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <!-- Logo Phase -->
+            <div class="logo-phase" data-aos="fade-up">
+                <h1 class="logo-heading">AIDES</h1>
+                <p class="logo-subtitle">Endless Creativity</p>
+            </div>
 
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1 class="logo-heading" data-aos="fade-up">AIDES</h1>
-                <p class="logo-subtitle" data-aos="fade-up" data-aos-delay="200">Endless Creativity</p>
-                <div class="social-buttons" data-aos="fade-up" data-aos-delay="400">
+            <!-- Social Phase -->
+            <div class="social-phase" data-aos="fade-up" data-aos-delay="200">
+                <div class="social-buttons">
                     <a href="https://www.facebook.com/people/Aides-Game-VN/61564920160083/"
                         class="social-button facebook-button">
-                        <span class="social-icon facebook-icon"></span>
+                        <img src="facebook-icon.png" alt="Facebook" class="social-icon">
                         Facebook
                     </a>
                     <a href="https://www.instagram.com/aides.vn" class="social-button instagram-button">
-                        <span class="social-icon instagram-icon"></span>
+                        <img src="Instagram-icon.png" alt="Instagram" class="social-icon">
                         Instagram
                     </a>
                 </div>
-                <div class="matrix" data-aos="fade-up" data-aos-delay="1000">
-                    <div class="matrix-item">
+            </div>
 
+            <!-- Coming Soon Phase -->
+            <div class="coming-soon-phase" data-aos="fade-up" data-aos-delay="400">
+                <div class="coming-soon-container">
+                    <div class="coming-soon-text">
+                        <span class="coming-text">COMING</span>
+                        <span class="soon-text">SOON</span>
+                    </div>
+                    <div class="countdown-container">
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="days">00</span>
+                            <span class="countdown-label">Days</span>
+                        </div>
+                        <span class="countdown-separator">:</span>
+
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="hours">00</span>
+                            <span class="countdown-label">Hours</span>
+                        </div>
+                        <span class="countdown-separator">:</span>
+
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="minutes">00</span>
+                            <span class="countdown-label">Mins</span>
+                        </div>
+                        <span class="countdown-separator">:</span>
+
+                        <div class="countdown-item">
+                            <span class="countdown-number" id="seconds">00</span>
+                            <span class="countdown-label">Secs</span>
+                        </div>
+                    </div>
+
+                    <div class="game-title">
+                        <span class="game-name">CELESTIAL HOP : </span>
+                        <span class="game-subtitle">Echoes of Ash, Seed of Light</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <footer class="footer">Celestial Hop: Echoes of Ash, Seed of Light 2025</footer>
+    <!-- Matrix Text -->
+    <div class="matrix" data-aos="fade-up" data-aos-delay="600">
+        <div class="matrix-item">
+            <span class="matrix-text"></span>
+        </div>
+    </div>
 
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <script src="scripts.js"></script>
-    </body>
+    <!-- Footer -->
+    <footer class="footer" data-aos="fade-up" data-aos-delay="800">
+        <p>AIDES™ – Break Limits. Build Legends.</p>
+        <p>© 2025 AIDES™. All rights reserved.</p>
 
-    </html>
-</DOCUMENT>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="scripts.js"></script>
+</body>
+
+</html>
