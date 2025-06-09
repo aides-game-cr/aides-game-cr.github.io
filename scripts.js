@@ -2,6 +2,9 @@
 import { Game } from './game.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+    //----------------------------------------------------
+    // KHỞI TẠO CÁC THƯ VIỆN VÀ BIẾN
+    //----------------------------------------------------
     AOS.init({
         duration: 1000,
         once: true,
@@ -9,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
         easing: 'ease-out-cubic'
     });
     
+    //----------------------------------------------------
+    // HIỆU ỨNG CON TRỎ CHUỘT TÙY CHỈNH
+    //----------------------------------------------------
     let cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
@@ -24,6 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
+    //----------------------------------------------------
+    // COUNTDOWN TIMER
+    //----------------------------------------------------
+    //----------------------------------------------------
+// ENHANCED COUNTDOWN TIMER WITH ANIMATIONS
+//----------------------------------------------------
 function startCountdown() {
     const launchDate = new Date('2025-12-31T00:00:00').getTime();
     const daysEl = document.getElementById('days');
@@ -32,6 +44,7 @@ function startCountdown() {
     const secondsEl = document.getElementById('seconds');
     const countdownContainer = document.querySelector('.countdown-container');
 
+    // Lưu giá trị cũ để detect thay đổi
     let previousValues = {
         days: '',
         hours: '',
@@ -39,10 +52,12 @@ function startCountdown() {
         seconds: ''
     };
 
+    // Hàm thêm hiệu ứng khi số thay đổi
     function animateNumberChange(element, newValue, oldValue) {
         if (newValue !== oldValue && element) {
             element.classList.add('changing');
             
+            // Tạo hiệu ứng số bay lên
             const flyingNumber = document.createElement('span');
             flyingNumber.textContent = oldValue;
             flyingNumber.style.cssText = `
@@ -61,6 +76,7 @@ function startCountdown() {
             element.parentElement.style.position = 'relative';
             element.parentElement.appendChild(flyingNumber);
             
+            // Xóa hiệu ứng sau khi hoàn thành
             setTimeout(() => {
                 element.classList.remove('changing');
                 if (flyingNumber.parentElement) {
@@ -70,6 +86,7 @@ function startCountdown() {
         }
     }
 
+    // Hàm tạo particles khi số thay đổi
     function createParticles(element) {
         const rect = element.getBoundingClientRect();
         const particles = [];
@@ -103,11 +120,13 @@ function startCountdown() {
         const distance = launchDate - now;
 
         if (distance < 0) {
+            // Countdown finished
             daysEl.textContent = '00';
             hoursEl.textContent = '00';
             minutesEl.textContent = '00';
             secondsEl.textContent = '00';
             
+            // Thêm hiệu ứng hoàn thành
             countdownContainer.classList.add('countdown-finished');
             return;
         }
@@ -124,6 +143,7 @@ function startCountdown() {
             seconds: seconds.toString().padStart(2, '0')
         };
 
+        // Animate changes và update display
         if (daysEl) {
             animateNumberChange(daysEl, newValues.days, previousValues.days);
             if (newValues.days !== previousValues.days && previousValues.days !== '') {
@@ -153,10 +173,12 @@ function startCountdown() {
             secondsEl.textContent = newValues.seconds;
         }
 
+        // Thêm hiệu ứng urgent khi còn ít thời gian
         if (days < 7) {
             countdownContainer.classList.add('countdown-urgent');
         }
 
+        // Lưu giá trị cũ
         previousValues = newValues;
     }
 
@@ -164,6 +186,7 @@ function startCountdown() {
     setInterval(updateCountdown, 1000);
 }
 
+    // Thêm CSS cho animations mới
     const additionalStyles = `
         @keyframes numberFlyUp {
             0% {
@@ -218,14 +241,19 @@ function startCountdown() {
     styleSheet.textContent = additionalStyles;
     document.head.appendChild(styleSheet);
 
+    //----------------------------------------------------
+    // THÊM INTERACTIVE HOVER EFFECTS
+    //----------------------------------------------------
     function addCountdownInteractivity() {
         const countdownItems = document.querySelectorAll('.countdown-item');
         
         countdownItems.forEach((item, index) => {
+            // Mouse enter effect
             item.addEventListener('mouseenter', function() {
                 this.style.animationDelay = `${index * 0.1}s`;
                 this.style.transform = 'translateY(-5px) scale(1.08)';
                 
+                // Tạo ring effect
                 const ring = document.createElement('div');
                 ring.style.cssText = `
                     position: absolute;
@@ -249,11 +277,14 @@ function startCountdown() {
                 }, 600);
             });
 
+            // Mouse leave effect
             item.addEventListener('mouseleave', function() {
                 this.style.transform = '';
             });
 
+            // Click effect
             item.addEventListener('click', function() {
+                // Tạo ripple effect
                 const ripple = document.createElement('div');
                 const rect = this.getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height);
@@ -282,6 +313,7 @@ function startCountdown() {
         });
     }
 
+    // CSS cho ring và ripple effects
     const interactiveStyles = `
         @keyframes ringExpand {
             0% {
@@ -312,6 +344,7 @@ function startCountdown() {
     interactiveStyleSheet.textContent = interactiveStyles;
     document.head.appendChild(interactiveStyleSheet);
 
+    // Khởi tạo tất cả các hiệu ứng
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             addCountdownInteractivity();
@@ -320,6 +353,9 @@ function startCountdown() {
 
         startCountdown();
 
+        //----------------------------------------------------
+        // ENHANCED MATRIX RAIN EFFECT
+        //----------------------------------------------------
         function createMatrixRain() {
             const canvas = document.createElement('canvas');
             canvas.style.position = 'fixed';
@@ -378,6 +414,9 @@ function startCountdown() {
 
         createMatrixRain();
 
+    //----------------------------------------------------
+    // DYNAMIC MATRIX TEXT GENERATION (LOADING ANIMATION)
+    //----------------------------------------------------
     function generateMatrixText() {
         const matrixTexts = [
             'INITIALIZING...',
@@ -408,6 +447,9 @@ function startCountdown() {
 
     setTimeout(generateMatrixText, 2000);
 
+    //----------------------------------------------------
+    // LOADER HANDLING
+    //----------------------------------------------------
     window.addEventListener('load', () => {
         const loader = document.querySelector('.loader');
         if (loader) {
@@ -415,10 +457,14 @@ function startCountdown() {
             setTimeout(() => loader.remove(), 500);
         }
     });
+    //----------------------------------------------------
+// [QUAN TRỌNG] LOGIC ĐIỀU KHIỂN GAME
+//----------------------------------------------------
     const gameContainer = document.getElementById('game-container');
     if (gameContainer) {
         console.log("Game container found. Initializing AIDES...");
 
+        // 1. Tạo ra cỗ máy game
         const aidesGame = new Game(gameContainer);
         aidesGame.initGame(); // Chỉ chuẩn bị scene, models... game chưa chạy
 
@@ -446,6 +492,7 @@ function startCountdown() {
                 aidesGame.resetGame(); // Ra lệnh cho cỗ máy bắt đầu lại
             });
         }
+        // 7. Thêm nút Tải Log
         if (downloadButton) {
             downloadButton.addEventListener('click', () => {
                 if (aidesGame) {
@@ -457,4 +504,138 @@ function startCountdown() {
     } else {
         console.error("Fatal Error: Game container 'game-container' not found!");
     }
+    const feedbackBtn = document.getElementById('feedback-btn');
+    const feedbackWrapper = document.getElementById('feedback-wrapper');
+    const feedbackForm = document.getElementById('feedback-form');
+    const closeFeedbackBtn = document.getElementById('close-feedback-btn');
+    const thankYouScreen = document.getElementById('thank-you-screen');
+    const closeThankYouBtn = document.getElementById('close-thank-you-btn');
+
+    function openPopup() {
+        if (feedbackWrapper) feedbackWrapper.classList.remove('hidden');
+        if (feedbackForm) feedbackForm.classList.remove('hidden');
+        if (thankYouScreen) thankYouScreen.classList.add('hidden');
+        const mouth = document.querySelector('.robot-face .mouth');
+        if (mouth) mouth.classList.remove('smiling');
+    }
+
+    function closePopup() {
+        if (feedbackWrapper) feedbackWrapper.classList.add('hidden');
+    }
+
+    if (feedbackBtn) feedbackBtn.addEventListener('click', openPopup);
+    if (closeFeedbackBtn) closeFeedbackBtn.addEventListener('click', closePopup);
+    if (closeThankYouBtn) closeThankYouBtn.addEventListener('click', closePopup);
+
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(feedbackForm);
+            fetch(feedbackForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    feedbackForm.classList.add('hidden');
+                    thankYouScreen.classList.remove('hidden');
+                    typeThankYouMessage();
+                    feedbackForm.reset(); 
+                } else {
+                    alert('Gửi thất bại, vui lòng thử lại!');
+                }
+            }).catch(error => {
+                alert('Đã có lỗi xảy ra!');
+                console.error(error);
+            });
+        });
+    }
+
+     function typeThankYouMessage() {
+    const messageEl = document.getElementById('thank-you-message');
+    if (!messageEl) return;
+
+    const lines = [
+        ">> NHẬN TÍN HIỆU...",
+        ">> PHÂN TÍCH PHẢN HỒI...",
+        ">> ...PHÂN TÍCH HOÀN TẤT.",
+        ">> KHỞI CHẠY GIAO THỨC CẢM ƠN...",
+        ">> AIDES GHI NHẬN ĐÓNG GÓP CỦA BẠN."
+    ];
+    
+    let currentLine = 0;
+    let currentChar = 0;
+    messageEl.textContent = "";
+
+    function createThankYouParticles() {
+        const rect = messageEl.getBoundingClientRect();
+        for (let i = 0; i < 10; i++) {
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: fixed;
+                width: 5px;
+                height: 5px;
+                background: #00cc66;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 1002;
+                left: ${rect.left + rect.width / 2}px;
+                top: ${rect.top + rect.height / 2}px;
+                animation: particleExplosion 1s ease-out forwards;
+                animation-delay: ${i * 0.1}s;
+            `;
+            document.body.appendChild(particle);
+            particle.addEventListener('animationend', () => {
+                if (particle.parentElement) {
+                    particle.parentElement.removeChild(particle);
+                }
+            });
+        }
+    }
+
+    function typeWriter() {
+        if (currentLine < lines.length) {
+            const line = lines[currentLine];
+            
+            if (currentChar < line.length) {
+                messageEl.textContent += line.charAt(currentChar);
+                currentChar++;
+                setTimeout(typeWriter, 100);
+            } else {
+                messageEl.textContent += '\n';
+                currentLine++;
+                currentChar = 0;
+                setTimeout(typeWriter, 300);
+            }
+        } else {
+            const mouth = document.querySelector('.robot-face .mouth');
+            if (mouth) mouth.classList.add('smiling');
+            createThankYouParticles(); // Thêm particles khi hoàn thành
+        }
+    }
+    typeWriter();
+}
+
+function openPopup() {
+    if (feedbackWrapper) {
+        feedbackWrapper.classList.remove('hidden');
+        feedbackWrapper.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            feedbackWrapper.style.transform = 'scale(1)';
+        }, 10);
+    }
+    if (feedbackForm) feedbackForm.classList.remove('hidden');
+    if (thankYouScreen) thankYouScreen.classList.add('hidden');
+    const mouth = document.querySelector('.robot-face .mouth');
+    if (mouth) mouth.classList.remove('smiling');
+}
+
+function closePopup() {
+    if (feedbackWrapper) {
+        feedbackWrapper.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            feedbackWrapper.classList.add('hidden');
+        }, 300);
+    }
+}
 });
