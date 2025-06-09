@@ -13,22 +13,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     //----------------------------------------------------
-    // HIỆU ỨNG CON TRỎ CHUỘT TÙY CHỈNH
+    // HIỆU ỨNG CON TRỎ CHUỘT TÙY CHỈNH (CHỈ CHO DESKTOP)
     //----------------------------------------------------
-    let cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    document.body.appendChild(cursor);
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+               || window.innerWidth <= 768
+               || ('ontouchstart' in window);
+    }
 
-    document.addEventListener('mousemove', function(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
+    // CHỈ TẠO CURSOR TRÊN DESKTOP
+    if (!isMobileDevice()) {
+        let cursor = document.createElement('div');
+        cursor.className = 'custom-cursor';
+        document.body.appendChild(cursor);
 
-    const interactiveElements = document.querySelectorAll('.logo-heading, .social-icon, .social-button, .coming-soon-container');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-    });
+        document.addEventListener('mousemove', function(e) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const interactiveElements = document.querySelectorAll('.logo-heading, .social-icon, .social-button, .coming-soon-container');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+    }
 
     //----------------------------------------------------
     // COUNTDOWN TIMER
@@ -244,112 +253,144 @@ function startCountdown() {
     //----------------------------------------------------
     // THÊM INTERACTIVE HOVER EFFECTS
     //----------------------------------------------------
-    function addCountdownInteractivity() {
-        const countdownItems = document.querySelectorAll('.countdown-item');
-        
-        countdownItems.forEach((item, index) => {
-            // Mouse enter effect
-            item.addEventListener('mouseenter', function() {
-                this.style.animationDelay = `${index * 0.1}s`;
-                this.style.transform = 'translateY(-5px) scale(1.08)';
+        function addCountdownInteractivity() {
+            const countdownItems = document.querySelectorAll('.countdown-item');
+            
+            countdownItems.forEach((item, index) => {
+                // CHỈ THÊM MOUSE EVENTS CHO DESKTOP
+                if (!isMobileDevice()) {
+                    // Mouse enter effect
+                    item.addEventListener('mouseenter', function() {
+                        this.style.animationDelay = `${index * 0.1}s`;
+                        this.style.transform = 'translateY(-5px) scale(1.08)';
+                        
+                        // Tạo ring effect
+                        const ring = document.createElement('div');
+                        ring.style.cssText = `
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            width: 0;
+                            height: 0;
+                            border: 2px solid #00cc66;
+                            border-radius: 50%;
+                            pointer-events: none;
+                            transform: translate(-50%, -50%);
+                            animation: ringExpand 0.6s ease-out forwards;
+                        `;
+                        
+                        this.appendChild(ring);
+                        
+                        setTimeout(() => {
+                            if (ring.parentElement) {
+                                ring.parentElement.removeChild(ring);
+                            }
+                        }, 600);
+                    });
+    
+                    // Mouse leave effect
+                    item.addEventListener('mouseleave', function() {
+                        this.style.transform = '';
+                    });
+                }
+    
+                // TOUCH/CLICK EFFECT CHO CẢ MOBILE VÀ DESKTOP
+                const clickEvent = isMobileDevice() ? 'touchstart' : 'click';
+                item.addEventListener(clickEvent, function(e) {
+                    e.preventDefault(); // Ngăn conflict với game controls
+                    
+                    // Tạo ripple effect
+                    const ripple = document.createElement('div');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        background: rgba(0, 204, 102, 0.3);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        transform: translate(-50%, -50%) scale(0);
+                        left: 50%;
+                        top: 50%;
+                        animation: rippleEffect 0.8s ease-out forwards;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        if (ripple.parentElement) {
+                            ripple.parentElement.removeChild(ripple);
+                        }
+                    }, 800);
+                });
+            });
+        }
+    
+        // ======= THÊM CSS ĐỂ TỐI ƯU CHO MOBILE =======
+        const mobileOptimizedStyles = `
+            /* Tối ưu touch events cho mobile */
+            @media (max-width: 768px) {
+                .countdown-item {
+                    touch-action: manipulation;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
                 
-                // Tạo ring effect
-                const ring = document.createElement('div');
-                ring.style.cssText = `
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
+                /* Ẩn cursor trên mobile */
+                .custom-cursor {
+                    display: none !important;
+                }
+                
+                /* Đảm bảo game controls không bị chặn */
+                #game-container, 
+                .game-controls,
+                .virtual-joystick,
+                .control-button {
+                    touch-action: manipulation;
+                    pointer-events: auto;
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
+            }
+    
+            /* CSS cho ring và ripple effects */
+            @keyframes ringExpand {
+                0% {
                     width: 0;
                     height: 0;
-                    border: 2px solid #00cc66;
-                    border-radius: 50%;
-                    pointer-events: none;
-                    transform: translate(-50%, -50%);
-                    animation: ringExpand 0.6s ease-out forwards;
-                `;
-                
-                this.appendChild(ring);
-                
-                setTimeout(() => {
-                    if (ring.parentElement) {
-                        ring.parentElement.removeChild(ring);
-                    }
-                }, 600);
-            });
-
-            // Mouse leave effect
-            item.addEventListener('mouseleave', function() {
-                this.style.transform = '';
-            });
-
-            // Click effect
-            item.addEventListener('click', function() {
-                // Tạo ripple effect
-                const ripple = document.createElement('div');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    background: rgba(0, 204, 102, 0.3);
-                    border-radius: 50%;
-                    pointer-events: none;
+                    opacity: 1;
+                }
+                100% {
+                    width: 120%;
+                    height: 120%;
+                    opacity: 0;
+                }
+            }
+    
+            @keyframes rippleEffect {
+                0% {
                     transform: translate(-50%, -50%) scale(0);
-                    left: 50%;
-                    top: 50%;
-                    animation: rippleEffect 0.8s ease-out forwards;
-                `;
-                
-                this.appendChild(ripple);
-                
-                setTimeout(() => {
-                    if (ripple.parentElement) {
-                        ripple.parentElement.removeChild(ripple);
-                    }
-                }, 800);
-            });
-        });
-    }
-
-    // CSS cho ring và ripple effects
-    const interactiveStyles = `
-        @keyframes ringExpand {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 0;
+                }
             }
-            100% {
-                width: 120%;
-                height: 120%;
-                opacity: 0;
-            }
-        }
-
-        @keyframes rippleEffect {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0;
-            }
-        }
-    `;
-
-    const interactiveStyleSheet = document.createElement('style');
-    interactiveStyleSheet.textContent = interactiveStyles;
-    document.head.appendChild(interactiveStyleSheet);
-
-    // Khởi tạo tất cả các hiệu ứng
-    document.addEventListener('DOMContentLoaded', function() {
+        `;
+    
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = mobileOptimizedStyles;
+        document.head.appendChild(styleSheet);
+    
+        // Khởi tạo countdown interactivity với mobile optimization
         setTimeout(() => {
             addCountdownInteractivity();
         }, 1000);
-    });
 
         startCountdown();
 
