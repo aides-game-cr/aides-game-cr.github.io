@@ -2328,11 +2328,9 @@ body::after {
 .console-content {
     padding: 10px;
     font-size: 11px;
-    /* <-- GIẢM CỠ CHỮ */
     white-space: pre;
     line-height: 1.6;
     height: 180px;
-    /* <-- GIẢM CHIỀU CAO */
     overflow-y: hidden;
 }
 
@@ -2399,7 +2397,7 @@ body::after {
     }
 }
 
-/* Responsive cho game container */
+/* === RESPONSIVE CHO GAME CONTAINER === */
 @media (max-width: 768px) {
     #game-container {
         height: 50vh;
@@ -2415,5 +2413,569 @@ body::after {
 
     #game-over-screen p {
         font-size: 1.2rem;
+    }
+}
+
+/* === ANIMATIONS & KEYFRAMES === */
+@keyframes glitch-top {
+
+    2%,
+    64% {
+        transform: translate(2px, -2px);
+    }
+
+    4%,
+    60% {
+        transform: translate(-2px, 2px);
+    }
+}
+
+@keyframes glitch-bottom {
+
+    2%,
+    64% {
+        transform: translate(-2px, 0);
+    }
+
+    4%,
+    60% {
+        transform: translate(-2px, 0);
+    }
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px #00ff88;
+    }
+
+    50% {
+        box-shadow: 0 0 25px #00ff88;
+    }
+}
+
+@keyframes eye-blink {
+
+    0%,
+    90%,
+    100% {
+        transform: scaleY(1);
+    }
+
+    95% {
+        transform: scaleY(0.1);
+    }
+}
+
+@keyframes glitchScan {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes particleEffect {
+    0% {
+        background: radial-gradient(circle, rgba(0, 204, 102, 0.2) 0%, transparent 70%);
+        opacity: 1;
+    }
+
+    100% {
+        background: radial-gradient(circle, rgba(0, 204, 102, 0) 0%, transparent 70%);
+        opacity: 0;
+    }
+}
+
+@keyframes blinkCursor {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* === FEEDBACK BUTTON === */
+#feedback-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #00cc66;
+    border: 2px solid #00ff88;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 0 15px #00ff88;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    font-size: 28px;
+    font-weight: bold;
+    color: #111;
+    animation: pulse-glow 2s infinite;
+}
+
+#feedback-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #00ff88;
+}
+
+/* Glitch Effects cho Button */
+#feedback-btn::before,
+#feedback-btn::after {
+    content: '?';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#feedback-btn::before {
+    color: #559973;
+    animation: glitch-top 1s linear infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+#feedback-btn::after {
+    color: #71d3d3;
+    animation: glitch-bottom 1.5s linear infinite;
+    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+}
+
+/* === FEEDBACK POPUP & WRAPPER === */
+#feedback-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: scale(1);
+}
+
+#feedback-popup.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8);
+}
+
+#feedback-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.9), rgba(0, 10, 5, 0.95));
+    z-index: 1001;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#feedback-wrapper.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.8);
+}
+
+/* === FEEDBACK FORM & THANK YOU SCREEN === */
+#feedback-form,
+#thank-you-screen {
+    background: #0d0d0d;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 450px;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 0 25px rgba(3, 116, 59, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+#thank-you-screen {
+    text-align: center;
+}
+
+/* === TEXT STYLES === */
+#feedback-form h3,
+#thank-you-screen h3 {
+    color: #00ff66;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 5px #00cc66;
+}
+
+#feedback-form p {
+    color: #999;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* === INPUT STYLES === */
+#feedback-form textarea,
+#feedback-form input {
+    width: 100%;
+    padding: 0.8rem;
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+}
+
+#feedback-form textarea:focus,
+#feedback-form input:focus {
+    border-color: #00cc66;
+    box-shadow: 0 0 10px #00cc66, inset 0 0 8px #00ff88;
+    transform: scale(1.02);
+}
+
+#feedback-form textarea::placeholder,
+#feedback-form input::placeholder {
+    color: #666;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* === BUTTON STYLES === */
+#feedback-form .form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+#feedback-form button {
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #00cc66;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+}
+
+#feedback-form button[type="submit"] {
+    background-color: #00cc66;
+    color: #111;
+}
+
+#feedback-form button[type="button"] {
+    background-color: #333;
+    color: #999;
+    border-color: #555;
+}
+
+#feedback-form button:hover {
+    box-shadow: 0 0 15px #00ff88;
+}
+
+#feedback-form button[type="submit"]:hover {
+    background-color: #00ff88;
+}
+
+#feedback-form button[type="button"]:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+#thank-you-screen button,
+#close-thank-you-btn {
+    padding: 0.8rem 2rem;
+    border: 2px solid #00cc66;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    background-color: transparent;
+    color: #00cc66;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+#thank-you-screen button:hover,
+#close-thank-you-btn:hover {
+    background-color: #00cc66;
+    color: #111;
+    box-shadow: 0 0 15px #00ff88;
+}
+
+/* === ROBOT FACE === */
+.robot-face {
+    width: 80px;
+    height: 50px;
+    margin: 0 auto 1.5rem auto;
+    position: relative;
+}
+
+.robot-face .eye {
+    width: 15px;
+    height: 15px;
+    background: #00ff66;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    box-shadow: 0 0 10px #00ff66;
+    animation: eye-blink 4s infinite;
+}
+
+.robot-face .eye.left {
+    left: 15px;
+}
+
+.robot-face .eye.right {
+    right: 15px;
+}
+
+.robot-face .mouth {
+    width: 40px;
+    height: 3px;
+    background: #00ff66;
+    position: absolute;
+    bottom: 5px;
+    left: 20px;
+}
+
+.robot-face .mouth.smiling {
+    width: 44px;
+    height: 22px;
+    background: transparent;
+    border: 3px solid #00ff66;
+    border-top-color: transparent;
+    border-radius: 0 0 22px 22px;
+    bottom: 8px;
+    left: 18px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* === THANK YOU MESSAGE === */
+#thank-you-message {
+    color: #00ff66;
+    font-size: 1.1rem;
+    white-space: pre-wrap;
+    text-align: left;
+    margin-bottom: 2.5rem;
+    min-height: 100px;
+    text-shadow: 0 0 8px #00cc66, 0 0 15px #00ff88;
+    position: relative;
+    line-height: 1.5;
+}
+
+#thank-you-message::after {
+    content: '█';
+    animation: blinkCursor 0.8s infinite;
+}
+
+#thank-you-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(0, 204, 102, 0.3), transparent);
+    animation: glitchScan 3s infinite;
+    pointer-events: none;
+}
+
+#thank-you-screen[data-active="true"]::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    animation: particleEffect 1.5s ease-out forwards;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+
+    /* Feedback Button */
+    #feedback-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 26px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    #feedback-btn:hover {
+        transform: scale(1.05);
+    }
+
+    /* Feedback Form & Thank You Screen */
+    #feedback-form,
+    #thank-you-screen {
+        padding: 1.5rem;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 10px;
+    }
+
+    #feedback-form h3,
+    #thank-you-screen h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    #feedback-form p {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    #feedback-form textarea,
+    #feedback-form input {
+        padding: 0.7rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    #feedback-form textarea {
+        min-height: 100px;
+    }
+
+    #feedback-form .form-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #feedback-form button,
+    #thank-you-screen button,
+    #close-thank-you-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        width: 100%;
+    }
+
+    /* Robot Face */
+    .robot-face {
+        width: 80px;
+        height: 40px;
+        margin-bottom: 1rem;
+    }
+
+    .robot-face .eye {
+        width: 12px;
+        height: 12px;
+        top: 10px;
+    }
+
+    .robot-face .mouth {
+        width: 40px;
+        height: 3px;
+        bottom: 5px;
+        left: 20px;
+    }
+
+    .robot-face .mouth.smiling {
+        width: 44px;
+        height: 20px;
+        bottom: 6px;
+        left: 18px;
+    }
+
+    /* Thank You Message */
+    #thank-you-message {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        min-height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Feedback Button */
+    #feedback-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    /* Feedback Form & Thank You Screen */
+    #feedback-form,
+    #thank-you-screen {
+        padding: 1rem;
+        width: 95%;
+        max-width: 350px;
+    }
+
+    #feedback-form h3,
+    #thank-you-screen h3 {
+        font-size: 1rem;
+    }
+
+    #feedback-form p {
+        font-size: 0.85rem;
+    }
+
+    #feedback-form textarea,
+    #feedback-form input {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    #feedback-form button,
+    #thank-you-screen button,
+    #close-thank-you-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.85rem;
+    }
+
+    /* Robot Face */
+    .robot-face {
+        width: 70px;
+        height: 35px;
+    }
+
+    .robot-face .eye {
+        width: 10px;
+        height: 10px;
+    }
+
+    .robot-face .mouth {
+        width: 35px;
+    }
+
+    .robot-face .mouth.smiling {
+        width: 38px;
+        height: 18px;
+    }
+
+    /* Thank You Message */
+    #thank-you-message {
+        font-size: 0.9rem;
+        min-height: 70px;
     }
 }
