@@ -520,28 +520,45 @@ function startCountdown() {
             }
         }
 
-        // 6. Thêm nút Toàn màn hình cho Mobile
+       // 6. Thêm nút Toàn màn hình cho Mobile (Phiên bản ổn định nhất)
         if (fullscreenButton) {
             fullscreenButton.addEventListener('click', () => {
-                const gameElement = document.documentElement;
-                const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+                // Lấy đúng phần tử #game-container thay vì cả trang
+                const gameContainerElement = document.getElementById('game-container');
+                if (!gameContainerElement) return;
 
-                if (!isFullscreen) {
-                    const requestFullscreen = gameElement.requestFullscreen || gameElement.webkitRequestFullscreen;
+                // Kiểm tra xem đã ở chế độ toàn màn hình chưa
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    console.log("Chưa ở chế độ toàn màn hình. Yêu cầu vào...");
+                    // --- VÀO CHẾ ĐỘ TOÀN MÀN HÌNH ---
+                    const requestFullscreen = gameContainerElement.requestFullscreen || gameContainerElement.webkitRequestFullscreen;
                     if (requestFullscreen) {
-                        requestFullscreen.call(gameElement).then(() => {
-                            if (screen.orientation && typeof screen.orientation.lock === 'function') {
-                                screen.orientation.lock('landscape').catch(err => console.warn("Không thể khóa xoay màn hình:", err));
-                            }
-                        }).catch(err => console.error(`Lỗi khi vào toàn màn hình: ${err.message}`));
+                        requestFullscreen.call(gameContainerElement);
                     }
                 } else {
+                    console.log("Đang ở chế độ toàn màn hình. Yêu cầu thoát...");
+                    // --- THOÁT CHẾ ĐỘ TOÀN MÀN HÌNH ---
                     const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
                     if (exitFullscreen) {
                         exitFullscreen.call(document);
                     }
                 }
             });
+
+            // Lắng nghe sự kiện thay đổi trạng thái fullscreen để thêm/xóa class
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+            function handleFullscreenChange() {
+                // Dùng class trên body để dễ dàng style bằng CSS
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    document.body.classList.add('is-fullscreen');
+                    console.log("Sự kiện: Đã vào chế độ toàn màn hình.");
+                } else {
+                    document.body.classList.remove('is-fullscreen');
+                    console.log("Sự kiện: Đã thoát chế độ toàn màn hình.");
+                }
+            }
         }
 
         // 7. Thêm nút Tải Log
