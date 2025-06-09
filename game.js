@@ -4,7 +4,6 @@ import { Pathfinder } from './pathfinding.js';
 export class Game {
     constructor(container) {
         this.gameContainer = container;
-        // Khởi tạo tất cả thuộc tính ở đây để quản lý tập trung
         Object.assign(this, {
             scene: null, camera: null, renderer: null, clock: new THREE.Clock(), keys: {},
             score: 0, isGameOver: false, isGameActive: false, frameCount: 0,
@@ -24,7 +23,6 @@ export class Game {
             logTimer: 0,
         });
 
-        // Bind 'this' context để các hàm callback không bị mất kết nối
         this.animate = this.animate.bind(this);
         this.resetGame = this.resetGame.bind(this);
         this.onWindowResize = this.onWindowResize.bind(this);
@@ -32,13 +30,12 @@ export class Game {
         this.handleKeyUp = this.handleKeyUp.bind(this);
     }
     
-    // --- KHỞI TẠO VÀ VÒNG LẶP GAME ---
     initGame() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x1a1a1a);
         this.scene.fog = new THREE.Fog(0x1a1a1a, 50, 100);
         const aspect = this.gameContainer.clientWidth / this.gameContainer.clientHeight;
-        const d = 25;
+        const d = 10;
         this.camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
         this.camera.position.set(25, 25, 25);
         this.camera.lookAt(0, 0, 0);
@@ -96,7 +93,6 @@ export class Game {
         this.renderer.render(this.scene, this.camera);
     }
     
-    // --- THIẾT LẬP VÀ ĐIỀU KHIỂN ---
     setupEventListeners() {
         document.addEventListener('keydown', this.handleKeyDown);
         document.addEventListener('keyup', this.handleKeyUp);
@@ -113,7 +109,6 @@ export class Game {
         this.clearPathVisualization();
         this.score = 0;
         this.trainingData = [];
-        // Ẩn nút tải xuống
         const downloadBtn = document.getElementById('download-log-btn');
         if (downloadBtn) downloadBtn.style.display = 'none';
         const scoreElement = document.getElementById('score');
@@ -159,7 +154,6 @@ export class Game {
     handleGameOver() {
         this.isGameOver = true;
         this.isGameActive = false;
-        // Hiển thị nút tải xuống
         const downloadBtn = document.getElementById('download-log-btn');
         if (downloadBtn) downloadBtn.style.display = 'flex';
         const finalScoreElement = document.getElementById('final-score');
@@ -216,7 +210,6 @@ export class Game {
         this.visualizeMonsterPath();
     }
     
-    // --- TẠO ĐỐI TƯỢNG ---
     createGround() { const g = new THREE.PlaneGeometry(this.groundSize, this.groundSize); const m = new THREE.MeshLambertMaterial({ color: 0x333333 }); this.ground = new THREE.Mesh(g, m); this.ground.rotation.x = -Math.PI / 2; this.ground.receiveShadow = true; this.scene.add(this.ground); }
     createPlayer() {
         const pg = new THREE.Group();
@@ -243,7 +236,6 @@ export class Game {
     createMonster() { this.monster = new THREE.Group(); this.monster.userData = { flankCooldown: 0, isFlanking: false }; const bodyGeometry = new THREE.SphereGeometry(1.2, 32, 32); const bodyMaterial = new THREE.MeshPhongMaterial({ color: 0xff2222, emissive: 0x441111 }); const body = new THREE.Mesh(bodyGeometry, bodyMaterial); body.castShadow = true; this.monster.add(body); const visionGeometry = new THREE.ConeGeometry(this.detectionRange, this.detectionRange * 1.2, 16, 1, true); const visionMaterial = new THREE.ShaderMaterial({ uniforms: { time: { value: 0 }, opacity: { value: 0.2 }, color: { value: new THREE.Color(0x00ff00) }, innerGlow: { value: 0.2 }, outerGlow: { value: 0.9 } }, vertexShader: `varying vec2 vUv; varying vec3 vPosition; void main() { vUv = uv; vPosition = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`, fragmentShader: `uniform float time, opacity, innerGlow, outerGlow; uniform vec3 color; varying vec2 vUv; varying vec3 vPosition; void main() { vec2 center = vec2(0.5, 0.0); float dist = distance(vUv, center); float pulse = sin(time * 4.0) * 0.2 + 0.8; float edgeGlow = 1.0 - smoothstep(innerGlow, outerGlow, dist); float scanLines = sin(vUv.y * 15.0 + time * 8.0) * 0.15 + 0.85; float radialFade = 1.0 - smoothstep(0.0, 0.8, dist); float alpha = opacity * edgeGlow * pulse * scanLines * radialFade; gl_FragColor = vec4(color, alpha); }`, transparent: true, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false }); this.visionCone = new THREE.Mesh(visionGeometry, visionMaterial); this.visionCone.position.set(0, 0, -this.detectionRange * 0.6); this.visionCone.rotation.x = -Math.PI / 2; this.monster.add(this.visionCone); this.createMonsterStateText(); this.scene.add(this.monster); }
     createMonsterStateText() { const canvas = document.createElement('canvas'); const context = canvas.getContext('2d'); canvas.width = 256; canvas.height = 64; context.font = 'Bold 24px Arial'; context.textAlign = 'center'; context.fillStyle = '#00ff00'; context.fillText('PATROLLING', canvas.width / 2, canvas.height / 2 + 8); const texture = new THREE.CanvasTexture(canvas); const textMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.1 }); const textGeometry = new THREE.PlaneGeometry(4, 1); this.monsterStateText = new THREE.Mesh(textGeometry, textMaterial); this.monsterStateText.position.set(0, 3, 0); this.monster.add(this.monsterStateText); }
     
-    // --- CÁC HÀM CẬP NHẬT (UPDATE) ---
     updatePlayerMovement(deltaTime) {
         if (!this.isGameActive || this.isGameOver) return;
         if (this.isGameOver) {
@@ -252,13 +244,11 @@ export class Game {
         }
 
         const direction = new THREE.Vector3();
-        // Keyboard input
         if (this.keys['KeyW'] || this.keys['ArrowUp']) direction.z = -1;
         if (this.keys['KeyS'] || this.keys['ArrowDown']) direction.z = 1;
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) direction.x = -1;
         if (this.keys['KeyD'] || this.keys['ArrowRight']) direction.x = 1;
 
-        // Joystick input (overrides keyboard if active)
         if (this.joystickDirection.lengthSq() > 0.1) {
             direction.copy(this.joystickDirection);
         }
@@ -320,7 +310,6 @@ export class Game {
     }
     updateVisionCone(color, opacity) { if (this.visionCone?.material?.uniforms) { this.visionCone.material.uniforms.color.value.setHex(color); this.visionCone.material.uniforms.opacity.value = opacity; this.visionCone.material.uniforms.time.value = this.clock.getElapsedTime(); this.visionCone.material.needsUpdate = true; } }
     
-    // --- LOGIC GAME & AI ---
     checkCollisions() { if (this.isGameOver) return; const playerBox = new THREE.Box3().setFromObject(this.player); this.collectibles.forEach(item => { if (item.visible) { const itemBox = new THREE.Box3().setFromObject(item); if (playerBox.intersectsBox(itemBox)) { item.visible = false; this.score += 100; this.createCollectParticles(item.position); setTimeout(() => { if (!this.isGameOver) this.respawnCollectible(item); }, 5000); } } }); if (this.monster) { const monsterBox = new THREE.Box3().setFromObject(this.monster.children[0]); if (playerBox.intersectsBox(monsterBox)) { this.handleGameOver(); } } }
     canMoveToPosition(position, radius) { const checkBox = new THREE.Box3().setFromCenterAndSize(position, new THREE.Vector3(radius * 2, 2, radius * 2)); return !this.obstacles.some(o => checkBox.intersectsBox(new THREE.Box3().setFromObject(o))); }
     isNearObstacle(p) { return this.obstacles.some(o => o.position.distanceTo(p) < 3); }
@@ -330,13 +319,11 @@ export class Game {
     setNewMonsterTarget() { this.monsterTargetPosition.set((Math.random() - 0.5) * (this.groundSize - 8), 1.5, (Math.random() - 0.5) * (this.groundSize - 8)); this.monsterPath = []; this.currentPathIndex = 0; }
     followPath(deltaTime, speed) { if (this.currentPathIndex < this.monsterPath.length) { const t = this.monsterPath[this.currentPathIndex]; const d = new THREE.Vector3().subVectors(t, this.monster.position); const distXZ = Math.sqrt(d.x * d.x + d.z * d.z); if (distXZ < 0.5) { this.currentPathIndex++; } else { d.normalize(); this.monster.position.add(d.multiplyScalar(speed * deltaTime)); } } }
     isPlayerInVision() {
-        // Tối ưu hóa: Nếu người chơi quá xa, bỏ qua ngay
         const distanceToPlayer = this.monster.position.distanceTo(this.player.position);
         if (distanceToPlayer > this.detectionRange) {
             return false;
         }
 
-        // Tối ưu hóa: Không cần kiểm tra mỗi frame, sử dụng kết quả đã lưu
         const now = this.clock.getElapsedTime();
         if (this.lastVisionCheck && now - this.lastVisionCheck < 0.1) { // 100ms
             return this.cachedVisionResult;
@@ -348,36 +335,26 @@ export class Game {
         const toPlayer = new THREE.Vector3().subVectors(this.player.position, this.monster.position).normalize();
         const angle = monsterForward.angleTo(toPlayer);
 
-        // Góc nhìn của quái vật là khoảng 120 độ (PI / 3 * 2)
         if (angle > Math.PI / 3) {
             this.cachedVisionResult = false;
             return false;
         }
 
-        // --- LOGIC RAYCAST ĐÃ SỬA LỖI ---
         const monsterEyes = this.monster.position.clone();
-        monsterEyes.y += 0.8; // Đặt mắt quái vật ở độ cao hợp lý
+        monsterEyes.y += 0.8; // Đặt mắt quái vật ở độ cao hợp l
 
-        // Tạo danh sách tất cả các vật thể có thể chặn tầm nhìn
-        // BAO GỒM TẤT CẢ CHƯỚNG NGẠI VẬT và CÁC BỘ PHẬN CỦA NGƯỜI CHƠI
         const objectsToCheck = [...this.obstacles, ...this.player.children];
 
-        // Bắn một tia từ mắt quái vật đến TÂM của người chơi
         const direction = new THREE.Vector3().subVectors(this.player.position, monsterEyes).normalize();
         const raycaster = new THREE.Raycaster(monsterEyes, direction);
 
-        // Bắn tia và lấy TẤT CẢ các vật thể nó chạm phải
         const intersects = raycaster.intersectObjects(objectsToCheck, false); // false vì chúng ta đã cung cấp các mesh con
 
-        // Nếu tia bắn không trúng gì, hoặc vật thể đầu tiên nó trúng KHÔNG PHẢI là người chơi
-        // thì tức là người chơi đã bị che khuất.
         if (intersects.length > 0 && intersects[0].object.name === 'player_part') {
-            // Chỉ khi vật thể ĐẦU TIÊN trúng phải là người chơi thì mới tính là nhìn thấy
             this.cachedVisionResult = true;
             return true;
         }
 
-        // Nếu không, người chơi đang bị che khuất
         this.cachedVisionResult = false;
         return false;
     }
@@ -478,7 +455,6 @@ export class Game {
                 break;
 
             case 'SCANNING':
-                // Nếu thấy lại người chơi, chuyển sang đuổi theo ngay
                 if (distanceToPlayer < this.detectionRange && this.isPlayerInVision()) {
                     this.monsterState = 'CHASING';
                     this.monsterPath = this.pathfinder.findPath(this.monster.position, this.player.position);
@@ -488,20 +464,16 @@ export class Game {
                     break;
                 }
 
-                // Kiểm tra xem quái vật đã đi hết đường đến vị trí cuối cùng chưa
                 const hasReachedDestination = this.currentPathIndex >= this.monsterPath.length || this.monsterPath.length === 0;
 
                 if (!hasReachedDestination) {
-                    // Nếu chưa đến, tiếp tục đi theo đường đã vạch ra
                     this.followPath(deltaTime, this.patrolSpeed * 1.2);
                 } else {
-                    // Nếu đã đến nơi, bắt đầu quét xung quanh
                     if (this.scanSubState === 'IDLE') {
                         this.startLookAroundScan();
                         if (this.scanLookPoints.length > 0) {
                             this.scanTargetQuaternion.copy(this.scanLookPoints.shift());
                         } else {
-                            // Không có điểm để quét, quay lại tuần tra
                             this.monsterState = 'PATROLLING';
                             break;
                         }
@@ -516,12 +488,10 @@ export class Game {
                         this.monster.quaternion.rotateTowards(this.scanTargetQuaternion, deltaTime * 3);
                         if (this.monster.quaternion.angleTo(this.scanTargetQuaternion) < 0.1) {
                             if (this.scanLookPoints.length > 0) {
-                                // Chuyển sang điểm quét tiếp theo
                                 this.scanTargetQuaternion.copy(this.scanLookPoints.shift());
                                 this.scanSubState = 'PAUSING';
                                 this.scanPauseTimer = 1.5 - this.aggressionLevel; // Dừng lại một chút
                             } else {
-                                // Đã quét xong, quay lại tuần tra
                                 this.monsterState = 'PATROLLING';
                             }
                         }
@@ -578,35 +548,25 @@ export class Game {
             this.monster.quaternion.slerp(q, deltaTime * 5.0);
         }
     }
-    /**
- * Thu thập trạng thái hiện tại của game, vector hóa và lưu lại.
- */
     logTrainingData() {
         if (!this.player || !this.monster) return;
 
-        // --- 1. TẠO RA ĐỐI TƯỢNG DỮ LIỆU RÕ RÀNG ---
         const dataPoint = {
-            // Trạng thái của môi trường và AI
             state: {
-                // Vị trí tương đối của quái vật
                 monster_relative_pos: {
                     x: this.monster.position.x - this.player.position.x,
                     z: this.monster.position.z - this.player.position.z,
                 },
-                // Hướng nhìn của quái vật
                 monster_forward_vector: {
                     x: new THREE.Vector3(0, 0, -1).applyQuaternion(this.monster.quaternion).x,
                     z: new THREE.Vector3(0, 0, -1).applyQuaternion(this.monster.quaternion).z,
                 },
-                // Vận tốc của người chơi
                 player_velocity: {
                     x: this.playerVelocity.x,
                     z: this.playerVelocity.z,
                 },
-                // Trạng thái của quái vật
-                monster_behavior: this.monsterState, // 'PATROLLING', 'CHASING', etc.
+                monster_behavior: this.monsterState, 
             },
-            // Hành động của người chơi tại thời điểm đó
             action: {
                 forward: (this.keys['KeyW'] || this.keys['ArrowUp']) ? 1 : 0,
                 backward: (this.keys['KeyS'] || this.keys['ArrowDown']) ? 1 : 0,
@@ -615,23 +575,16 @@ export class Game {
             }
         };
 
-        // --- 2. LƯU ĐỐI TƯỢNG VÀO MẢNG ---
-        // Không chuyển thành vector nữa, giữ nguyên cấu trúc đối tượng
         this.trainingData.push(dataPoint);
     }
 
 
-    /**
-     * Chuyển dữ liệu đã thu thập thành file JSON và cho phép người dùng tải về.
-     */
     downloadTrainingData() {
         if (this.trainingData.length === 0) {
             alert("Chưa có dữ liệu nào được ghi lại!");
             return;
         }
 
-        // --- SỬ DỤNG JSON.stringify VỚI THAM SỐ ĐỂ LÀM ĐẸP ---
-        // Tham số thứ 3 (số 2) sẽ thụt lề mỗi cấp bằng 2 dấu cách
         const dataStr = JSON.stringify(this.trainingData, null, 2); 
         const dataBlob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(dataBlob);
@@ -645,7 +598,6 @@ export class Game {
         link.click();
         document.body.removeChild(link);
     }
-    // --- CÁC HÀM VISUALIZATION ---
     createPathVisualization() { this.pathVisualizationGroup = new THREE.Group(); this.scene.add(this.pathVisualizationGroup); }
     clearPathVisualization() { if (this.pathVisualizationGroup) { while(this.pathVisualizationGroup.children.length > 0) { this.pathVisualizationGroup.remove(this.pathVisualizationGroup.children[0]); } } this.pathLines = []; this.pathArrows = []; this.nextMoveArrow = null; }
     visualizeMonsterPath() { this.clearPathVisualization(); if (!this.monster || !this.pathVisualizationGroup || this.monsterPath.length === 0) return; let pathColor, arrowColor; const stateColors = { CHASING: { p: 0xff0000, a: 0xff4444 }, PATROLLING: { p: 0x00ff00, a: 0x44ff44 }, SCANNING: { p: 0xffff00, a: 0xffff44 }, INVESTIGATING: { p: 0xffa500, a: 0xffc500 } }; const colors = stateColors[this.monsterState] || { p: 0xffffff, a: 0xffffff }; pathColor = colors.p; arrowColor = colors.a; if (this.currentPathIndex < this.monsterPath.length) { const startLine = this.createPathLine(this.monster.position.clone(), this.monsterPath[this.currentPathIndex], pathColor, 0.8); this.pathVisualizationGroup.add(startLine); this.pathLines.push(startLine); } for (let i = this.currentPathIndex; i < this.monsterPath.length - 1; i++) { const line = this.createPathLine(this.monsterPath[i], this.monsterPath[i + 1], pathColor, 0.6 - (i - this.currentPathIndex) * 0.1); this.pathVisualizationGroup.add(line); this.pathLines.push(line); if ((i - this.currentPathIndex) % 3 === 0) { const direction = new THREE.Vector3().subVectors(this.monsterPath[i + 1], this.monsterPath[i]).normalize(); const arrow = this.createArrow(this.monsterPath[i], direction, arrowColor, 0.4); this.pathVisualizationGroup.add(arrow); this.pathArrows.push(arrow); } } if (this.currentPathIndex < this.monsterPath.length) { const nextTarget = this.monsterPath[this.currentPathIndex]; const direction = new THREE.Vector3().subVectors(nextTarget, this.monster.position).normalize(); this.nextMoveArrow = this.createArrow(this.monster.position.clone().add(new THREE.Vector3(0, 1, 0)), direction, pathColor, 0.8); this.nextMoveArrow.userData = { originalScale: this.nextMoveArrow.scale.clone() }; this.pathVisualizationGroup.add(this.nextMoveArrow); } if (this.monsterPath.length > 0) { const targetGeometry = new THREE.SphereGeometry(0.3, 16, 16); const targetMaterial = new THREE.MeshBasicMaterial({ color: pathColor, transparent: true, opacity: 0.8 }); const targetSphere = new THREE.Mesh(targetGeometry, targetMaterial); targetSphere.position.copy(this.monsterPath[this.monsterPath.length - 1]); targetSphere.position.y += 0.3; this.pathVisualizationGroup.add(targetSphere); } }
