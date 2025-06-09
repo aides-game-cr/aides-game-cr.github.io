@@ -606,23 +606,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    function typeThankYouMessage() {
-        const messageEl = document.getElementById('thank-you-message');
-        if (!messageEl) return;
-
-        const lines = [
-            ">> NHẬN TÍN HIỆU...",
-            ">> PHÂN TÍCH PHẢN HỒI...",
-            ">> ...PHÂN TÍCH HOÀN TẤT.",
-            ">> KHỞI CHẠY GIAO THỨC CẢM ƠN...",
-            ">> AIDES GHI NHẬN ĐÓNG GÓP CỦA BẠN."
-        ];
-        
-        let currentLine = 0;
-        let currentChar = 0;
-        messageEl.textContent = "";
-
+    
         function createThankYouParticles() {
             const rect = messageEl.getBoundingClientRect();
             for (let i = 0; i < 10; i++) {
@@ -648,7 +632,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         }
-
+        function typeThankYouMessage() {
+            const messageEl = document.getElementById('thank-you-message');
+            if (!messageEl) return;
+    
+            const lines = [
+                ">> NHẬN TÍN HIỆU...",
+                ">> PHÂN TÍCH PHẢN HỒI...",
+                ">> ...PHÂN TÍCH HOÀN TẤT.",
+                ">> KHỞI CHẠY GIAO THỨC CẢM ƠN...",
+                ">> AIDES GHI NHẬN ĐÓNG GÓP CỦA BẠN."
+            ];
+            
+            let currentLine = 0;
+            let currentChar = 0;
+            messageEl.textContent = "";
         function typeWriter() {
             if (currentLine < lines.length) {
                 const line = lines[currentLine];
