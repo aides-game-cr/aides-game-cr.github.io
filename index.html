@@ -6,29 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDES - Endless Creativity</title>
     <link rel="stylesheet" href="style.css">
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>AIDES</text></svg>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.min.js"></script>
 </head>
 
 <body>
-    <!-- Loader -->
     <div class="loader">
         <div class="loader-text">AIDES LOADING</div>
         <div class="progress-bar"></div>
     </div>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <!-- Logo Phase -->
             <div class="logo-phase" data-aos="fade-up">
                 <h1 class="logo-heading">AIDES</h1>
                 <p class="logo-subtitle">Endless Creativity</p>
             </div>
 
-            <!-- Social Phase -->
             <div class="social-phase" data-aos="fade-up" data-aos-delay="200">
                 <div class="social-buttons">
                     <a href="https://www.facebook.com/people/Aides-Game-VN/61564920160083/"
@@ -43,7 +49,6 @@
                 </div>
             </div>
 
-            <!-- Coming Soon Phase -->
             <div class="coming-soon-phase" data-aos="fade-up" data-aos-delay="400">
                 <div class="coming-soon-container">
                     <div class="coming-soon-text">
@@ -81,25 +86,60 @@
                     </div>
                 </div>
             </div>
+
+            <div id="game-section" data-aos="fade-up" data-aos-delay="600">
+                <h2 class="game-section-title">MINI-GAME TEST</h2>
+
+                <div id="game-container">
+                    <button id="fullscreen-btn" title="Toàn màn hình"></button>
+
+                    <div id="game-ui">
+                        <div id="score">Score: 0</div>
+                        <div id="info">Sử dụng WASD hoặc phím mũi tên để di chuyển</div>
+                    </div>
+                    <div id="start-screen">
+                        <div class="start-content">
+                            <h1>AIDES</h1>
+                            <p>Survive as long as you can.</p>
+                            <button id="start-button">PLAY</button>
+                        </div>
+                    </div>
+                    <div id="game-over-screen">
+                        <h2>GAME OVER</h2>
+                        <p id="final-score"></p>
+                        <button id="restart-button">Chơi Lại</button>
+                        <button id="download-log-btn" title="Tải dữ liệu huấn luyện"></button>
+                    </div>
+                    <div id="debug-console">
+                        <div class="console-header">AI MONITOR</div>
+                        <div id="console-content" class="console-content"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Matrix Text -->
     <div class="matrix" data-aos="fade-up" data-aos-delay="600">
         <div class="matrix-item">
             <span class="matrix-text"></span>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer" data-aos="fade-up" data-aos-delay="800">
         <p>AIDES™ – Break Limits. Build Legends.</p>
         <p>© 2025 AIDES™. All rights reserved.</p>
 
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="scripts.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="scripts.js"></script>
+    <div id="joystick-container" style="position: fixed; left: 50px; bottom: 50px; z-index: 10;"></div>
 </body>
 
 </html>
