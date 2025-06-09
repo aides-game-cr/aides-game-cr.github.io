@@ -87,7 +87,7 @@
             </div>
 
             <div id="game-section" data-aos="fade-up" data-aos-delay="600">
-                <h2 class="game-section-title">MINI-GAME TEST</h2>
+                <h2 class="game-section-title">MINI TEST GAME PLAY</h2>
 
                 <div id="game-container">
                     <div id="game-ui">
@@ -104,8 +104,8 @@
                     <div id="game-over-screen">
                         <h2>GAME OVER</h2>
                         <p id="final-score"></p>
-                        <button id="restart-button">Chơi Lại</button>
-                        <button id="download-log-btn" title="Tải dữ liệu huấn luyện"></button>
+                        <button id="restart-button">RESTART</button>
+                        <button id="download-log-btn" title="DOWNLOAD TRAINING DATA"></button>
                     </div>
                     <div id="debug-console">
                         <div class="console-header">AI MONITOR</div>
@@ -115,7 +115,30 @@
             </div>
         </div>
     </section>
+    <button id="feedback-btn" title="Gửi phản hồi">?</button>
+    <div id="feedback-wrapper" class="hidden">
+        <form id="feedback-form" action="https://formspree.io/f/xblygylq" method="POST">
+            <h3>Gửi Phản Hồi</h3>
+            <p>Ý kiến của bạn giúp game khi hoàn thiện sẽ tốt hơn!</p>
+            <p>Đây là tựa game nhỏ trong chuỗi game mini để test gameplay nhằm hoàn thiện sản phẩm cuối.</p>
+            <textarea name="message" placeholder="> Nhập ý kiến của bạn ở đây..." required></textarea>
+            <input type="email" name="_replyto" placeholder="> Email của bạn (không bắt buộc)">
+            <div class="form-buttons">
+                <button type="submit">Gửi</button>
+                <button type="button" id="close-feedback-btn">Đóng</button>
+            </div>
+        </form>
 
+        <div id="thank-you-screen" class="hidden">
+            <div class="matrix-scanline"></div>
+            <div class="robot-face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
+            </div>
+            <pre id="thank-you-message"></pre> <button type="button" id="close-thank-you-btn">OK</button>
+        </div>
+    </div>
     <div class="matrix" data-aos="fade-up" data-aos-delay="600">
         <div class="matrix-item">
             <span class="matrix-text"></span>
