@@ -502,8 +502,7 @@ function startCountdown() {
             if (joystickContainer) {
                 const joystickOptions = {
                     zone: joystickContainer,
-                    mode: 'static',
-                    position: { left: '50%', top: '50%' },
+                    mode: 'dynamic',
                     color: 'white',
                     size: 100
                 };
