@@ -2028,3 +2028,437 @@ body::after {
         }
     }
 }
+
+/* === GAME SECTION STYLES === */
+#game-section {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.game-section-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #00cc66;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(0, 204, 102, 0.3);
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    /* Điều chỉnh chiều cao nếu cần */
+    border: 2px solid #00cc66;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #0d0d0d;
+    box-shadow: 0 0 20px rgba(0, 204, 102, 0.2);
+}
+
+#game-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#game-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Cho UI chiếm toàn bộ khung game */
+    padding: 20px;
+    pointer-events: none;
+    /* Cho phép click xuyên qua */
+    z-index: 100;
+    font-family: 'Courier New', monospace;
+    color: #00ff66;
+    text-shadow: 0 0 5px #00ff66;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* Canh lề trên */
+}
+
+/* Loại bỏ các khối CSS cũ cho #score và #info */
+
+/* Thêm các khối mới này */
+#score,
+#info {
+    background: transparent;
+    padding: 10px 15px;
+    border: 1px solid rgba(0, 255, 102, 0.3);
+    position: relative;
+    letter-spacing: 0.1em;
+}
+
+/* Thêm các đường line trang trí cho HUD */
+#score::before,
+#score::after,
+#info::before,
+#info::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: #00ff66;
+    border-style: solid;
+}
+
+#score::before {
+    top: -2px;
+    left: -2px;
+    border-width: 2px 0 0 2px;
+}
+
+#score::after {
+    top: -2px;
+    right: -2px;
+    border-width: 2px 2px 0 0;
+}
+
+#info::before {
+    bottom: -2px;
+    left: -2px;
+    border-width: 0 0 2px 2px;
+}
+
+#info::after {
+    bottom: -2px;
+    right: -2px;
+    border-width: 0 2px 2px 0;
+}
+
+#fullscreen-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00cc66;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 201;
+    /* Nằm trên các UI khác */
+    display: none;
+    /* Mặc định ẩn trên máy tính */
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    padding: 0;
+}
+
+#fullscreen-btn:hover {
+    background-color: rgba(0, 204, 102, 0.3);
+}
+
+/* Biểu tượng "vào" toàn màn hình */
+#fullscreen-btn::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 2h-2v3h-3v2h5v-5zm-3-4V7h-2V5h5v5h-2z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Chỉ hiển thị nút bấm trên thiết bị di động/cảm ứng */
+@media (hover: none) and (pointer: coarse) {
+    #fullscreen-btn {
+        display: flex;
+    }
+}
+
+/* Thay đổi biểu tượng khi đang ở chế độ toàn màn hình */
+body:fullscreen #fullscreen-btn::before,
+body:-webkit-full-screen #fullscreen-btn::before,
+body:-moz-full-screen #fullscreen-btn::before,
+body:-ms-fullscreen #fullscreen-btn::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z'/%3E%3C/svg%3E");
+}
+
+/* === NÚT TẢI LOG === */
+#download-log-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    /* Đặt ở góc trên bên trái */
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00cc66;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 201;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    padding: 0;
+}
+
+#download-log-btn:hover {
+    background-color: rgba(0, 204, 102, 0.3);
+}
+
+/* Biểu tượng "tải xuống" */
+#download-log-btn::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#start-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    /* Nền đen mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    /* Luôn nằm trên cùng */
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    transition: opacity 0.5s ease-out;
+    /* Hiệu ứng mờ dần khi biến mất */
+}
+
+.start-content h1 {
+    font-size: 4em;
+    color: #00ff66;
+    text-shadow: 0 0 10px #00ff66;
+    margin-bottom: 0.5em;
+}
+
+.start-content p {
+    font-size: 1.2em;
+    margin-bottom: 2em;
+}
+
+#start-button {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #111;
+    background-color: #00ff66;
+    border: 2px solid #00ff66;
+    padding: 15px 30px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00ff66;
+    transition: all 0.3s;
+}
+
+#start-button:hover {
+    background-color: #111;
+    color: #00ff66;
+}
+
+#game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    /* Ẩn mặc định */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #00cc66;
+    z-index: 200;
+}
+
+#game-over-screen h2 {
+    font-size: 4rem;
+    text-transform: uppercase;
+    animation: textShine 3s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+#game-over-screen p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+#restart-button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    color: #ffffff;
+    background: #00cc66;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+#restart-button:hover {
+    background: #00ff88;
+    color: #000;
+    box-shadow: 0 0 15px #00ff88;
+}
+
+/* --- NÂNG CẤP TOÀN DIỆN CONSOLE AI --- */
+#debug-console {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 280px;
+    /* Tăng chiều rộng một chút */
+    max-height: 240px;
+    background: rgba(10, 25, 10, 0.65);
+    /* Nền tối và mờ hơn */
+    border: 1px solid rgba(0, 255, 100, 0.5);
+    border-radius: 5px;
+    color: #00ff64;
+    font-family: 'Courier New', monospace;
+    z-index: 150;
+    box-shadow: 0 0 25px rgba(0, 255, 100, 0.2);
+    backdrop-filter: blur(4px);
+    /* Hiệu ứng kính mờ */
+    overflow: hidden;
+    /* Rất quan trọng cho các pseudo-element */
+    animation: consoleFlicker 8s linear infinite;
+    pointer-events: none;
+}
+
+/* Thêm hiệu ứng đường quét (scanline) */
+#debug-console::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(0, 255, 100, 0.05) 50%,
+            transparent 100%);
+    background-size: 100% 4px;
+    /* Kích thước của đường quét */
+    animation: scan 0.2s linear infinite;
+    pointer-events: none;
+}
+
+/* Header của Console */
+.console-header {
+    background: linear-gradient(to right, rgba(0, 255, 100, 0.2), transparent);
+    padding: 6px 12px;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    text-align: left;
+    text-shadow: 0 0 5px #00ff64;
+    border-bottom: 1px solid rgba(0, 255, 100, 0.3);
+}
+
+/* Nội dung Console */
+.console-content {
+    padding: 10px;
+    font-size: 11px;
+    /* <-- GIẢM CỠ CHỮ */
+    white-space: pre;
+    line-height: 1.6;
+    height: 180px;
+    /* <-- GIẢM CHIỀU CAO */
+    overflow-y: hidden;
+}
+
+/* Thêm một con trỏ nhấp nháy ở cuối văn bản */
+.console-content::after {
+    content: '█';
+    animation: blinkCursor 1s infinite;
+}
+
+.console-content::-webkit-scrollbar {
+    width: 6px;
+    /* Chiều rộng thanh cuộn */
+}
+
+.console-content::-webkit-scrollbar-track {
+    background: rgba(0, 255, 100, 0.1);
+    /* Màu của rãnh cuộn */
+}
+
+.console-content::-webkit-scrollbar-thumb {
+    background-color: #00ff64;
+    /* Màu của con trượt */
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.console-content::-webkit-scrollbar-thumb:hover {
+    background-color: #ffffff;
+    /* Màu khi di chuột vào */
+}
+
+/* Keyframes cho các hiệu ứng mới */
+@keyframes scan {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 0 4px;
+    }
+}
+
+@keyframes consoleFlicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.95;
+    }
+}
+
+@keyframes blinkCursor {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Responsive cho game container */
+@media (max-width: 768px) {
+    #game-container {
+        height: 50vh;
+    }
+
+    #game-ui {
+        font-size: 0.8rem;
+    }
+
+    #game-over-screen h2 {
+        font-size: 3rem;
+    }
+
+    #game-over-screen p {
+        font-size: 1.2rem;
+    }
+}
