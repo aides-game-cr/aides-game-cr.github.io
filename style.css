@@ -2556,8 +2556,8 @@ body:-ms-fullscreen #fullscreen-btn::before {
 
 @media (orientation: portrait) {
 
-    body:fullscreen #rotate-device-prompt,
-    body:-webkit-full-screen #rotate-device-prompt {
+    /* Khi body có class is-fullscreen, hiện thông báo */
+    body.is-fullscreen #rotate-device-prompt {
         display: flex;
     }
 }
