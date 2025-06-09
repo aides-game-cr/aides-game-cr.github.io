@@ -99,7 +99,18 @@ export class Game {
         window.addEventListener('resize', this.onWindowResize);
     }
 
-    handleKeyDown(e) { if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault(); this.keys[e.code] = true; }
+    handleKeyDown(e) {
+        // Nếu người dùng đang gõ chữ trong một ô text (textarea) hoặc ô input...
+        if (e.target.nodeName === 'TEXTAREA' || e.target.nodeName === 'INPUT') {
+            return; // ...thì không làm gì cả, để cho việc gõ chữ diễn ra bình thường.
+        }
+    
+        // Ngược lại, nếu không phải đang gõ chữ, thì đây là lúc điều khiển game
+        if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+            e.preventDefault(); // Chặn hành vi mặc định của phím (như cuộn trang)
+            this.keys[e.code] = true;
+        }
+    }
     handleKeyUp(e) { this.keys[e.code] = false; }
     onWindowResize() { const aspect = this.gameContainer.clientWidth / this.gameContainer.clientHeight; this.camera.left = -25 * aspect; this.camera.right = 25 * aspect; this.camera.top = 25; this.camera.bottom = -25; this.camera.updateProjectionMatrix(); this.renderer.setSize(this.gameContainer.clientWidth, this.gameContainer.clientHeight); }
 
