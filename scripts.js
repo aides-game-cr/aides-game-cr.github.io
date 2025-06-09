@@ -2,9 +2,6 @@
 import { Game } from './game.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    //----------------------------------------------------
-    // KHỞI TẠO CÁC THƯ VIỆN VÀ BIẾN
-    //----------------------------------------------------
     AOS.init({
         duration: 1000,
         once: true,
@@ -12,9 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         easing: 'ease-out-cubic'
     });
     
-    //----------------------------------------------------
-    // HIỆU ỨNG CON TRỎ CHUỘT TÙY CHỈNH
-    //----------------------------------------------------
     let cursor = document.createElement('div');
     cursor.className = 'custom-cursor';
     document.body.appendChild(cursor);
@@ -30,12 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
         el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
-    //----------------------------------------------------
-    // COUNTDOWN TIMER
-    //----------------------------------------------------
-    //----------------------------------------------------
-// ENHANCED COUNTDOWN TIMER WITH ANIMATIONS
-//----------------------------------------------------
 function startCountdown() {
     const launchDate = new Date('2025-12-31T00:00:00').getTime();
     const daysEl = document.getElementById('days');
@@ -44,7 +32,6 @@ function startCountdown() {
     const secondsEl = document.getElementById('seconds');
     const countdownContainer = document.querySelector('.countdown-container');
 
-    // Lưu giá trị cũ để detect thay đổi
     let previousValues = {
         days: '',
         hours: '',
@@ -52,12 +39,10 @@ function startCountdown() {
         seconds: ''
     };
 
-    // Hàm thêm hiệu ứng khi số thay đổi
     function animateNumberChange(element, newValue, oldValue) {
         if (newValue !== oldValue && element) {
             element.classList.add('changing');
             
-            // Tạo hiệu ứng số bay lên
             const flyingNumber = document.createElement('span');
             flyingNumber.textContent = oldValue;
             flyingNumber.style.cssText = `
@@ -76,7 +61,6 @@ function startCountdown() {
             element.parentElement.style.position = 'relative';
             element.parentElement.appendChild(flyingNumber);
             
-            // Xóa hiệu ứng sau khi hoàn thành
             setTimeout(() => {
                 element.classList.remove('changing');
                 if (flyingNumber.parentElement) {
@@ -86,7 +70,6 @@ function startCountdown() {
         }
     }
 
-    // Hàm tạo particles khi số thay đổi
     function createParticles(element) {
         const rect = element.getBoundingClientRect();
         const particles = [];
@@ -120,13 +103,11 @@ function startCountdown() {
         const distance = launchDate - now;
 
         if (distance < 0) {
-            // Countdown finished
             daysEl.textContent = '00';
             hoursEl.textContent = '00';
             minutesEl.textContent = '00';
             secondsEl.textContent = '00';
             
-            // Thêm hiệu ứng hoàn thành
             countdownContainer.classList.add('countdown-finished');
             return;
         }
@@ -143,7 +124,6 @@ function startCountdown() {
             seconds: seconds.toString().padStart(2, '0')
         };
 
-        // Animate changes và update display
         if (daysEl) {
             animateNumberChange(daysEl, newValues.days, previousValues.days);
             if (newValues.days !== previousValues.days && previousValues.days !== '') {
@@ -173,12 +153,10 @@ function startCountdown() {
             secondsEl.textContent = newValues.seconds;
         }
 
-        // Thêm hiệu ứng urgent khi còn ít thời gian
         if (days < 7) {
             countdownContainer.classList.add('countdown-urgent');
         }
 
-        // Lưu giá trị cũ
         previousValues = newValues;
     }
 
@@ -186,7 +164,6 @@ function startCountdown() {
     setInterval(updateCountdown, 1000);
 }
 
-    // Thêm CSS cho animations mới
     const additionalStyles = `
         @keyframes numberFlyUp {
             0% {
@@ -241,19 +218,14 @@ function startCountdown() {
     styleSheet.textContent = additionalStyles;
     document.head.appendChild(styleSheet);
 
-    //----------------------------------------------------
-    // THÊM INTERACTIVE HOVER EFFECTS
-    //----------------------------------------------------
     function addCountdownInteractivity() {
         const countdownItems = document.querySelectorAll('.countdown-item');
         
         countdownItems.forEach((item, index) => {
-            // Mouse enter effect
             item.addEventListener('mouseenter', function() {
                 this.style.animationDelay = `${index * 0.1}s`;
                 this.style.transform = 'translateY(-5px) scale(1.08)';
                 
-                // Tạo ring effect
                 const ring = document.createElement('div');
                 ring.style.cssText = `
                     position: absolute;
@@ -277,14 +249,11 @@ function startCountdown() {
                 }, 600);
             });
 
-            // Mouse leave effect
             item.addEventListener('mouseleave', function() {
                 this.style.transform = '';
             });
 
-            // Click effect
             item.addEventListener('click', function() {
-                // Tạo ripple effect
                 const ripple = document.createElement('div');
                 const rect = this.getBoundingClientRect();
                 const size = Math.max(rect.width, rect.height);
@@ -313,7 +282,6 @@ function startCountdown() {
         });
     }
 
-    // CSS cho ring và ripple effects
     const interactiveStyles = `
         @keyframes ringExpand {
             0% {
@@ -344,7 +312,6 @@ function startCountdown() {
     interactiveStyleSheet.textContent = interactiveStyles;
     document.head.appendChild(interactiveStyleSheet);
 
-    // Khởi tạo tất cả các hiệu ứng
     document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             addCountdownInteractivity();
@@ -353,9 +320,6 @@ function startCountdown() {
 
         startCountdown();
 
-        //----------------------------------------------------
-        // ENHANCED MATRIX RAIN EFFECT
-        //----------------------------------------------------
         function createMatrixRain() {
             const canvas = document.createElement('canvas');
             canvas.style.position = 'fixed';
@@ -414,9 +378,6 @@ function startCountdown() {
 
         createMatrixRain();
 
-    //----------------------------------------------------
-    // DYNAMIC MATRIX TEXT GENERATION (LOADING ANIMATION)
-    //----------------------------------------------------
     function generateMatrixText() {
         const matrixTexts = [
             'INITIALIZING...',
@@ -447,9 +408,6 @@ function startCountdown() {
 
     setTimeout(generateMatrixText, 2000);
 
-    //----------------------------------------------------
-    // LOADER HANDLING
-    //----------------------------------------------------
     window.addEventListener('load', () => {
         const loader = document.querySelector('.loader');
         if (loader) {
@@ -457,25 +415,19 @@ function startCountdown() {
             setTimeout(() => loader.remove(), 500);
         }
     });
-    //----------------------------------------------------
-// [QUAN TRỌNG] LOGIC ĐIỀU KHIỂN GAME
-//----------------------------------------------------
     const gameContainer = document.getElementById('game-container');
     if (gameContainer) {
         console.log("Game container found. Initializing AIDES...");
 
-        // 1. Tạo ra cỗ máy game
         const aidesGame = new Game(gameContainer);
         aidesGame.initGame(); // Chỉ chuẩn bị scene, models... game chưa chạy
 
-        // 2. Lấy các phần tử giao diện
         const startButton = document.getElementById('start-button');
         const startScreen = document.getElementById('start-screen');
         const restartButton = document.getElementById('restart-button');
         const fullscreenButton = document.getElementById('fullscreen-btn');
         const downloadButton = document.getElementById('download-log-btn');
 
-        // 3. Gán sự kiện cho nút "Start"
         if (startButton && startScreen) {
             startButton.addEventListener('click', () => {
                 console.log("Start button clicked. Starting game...");
@@ -488,80 +440,12 @@ function startCountdown() {
             });
         }
 
-        // 4. Gán sự kiện cho nút "Restart"
         if (restartButton) {
             restartButton.addEventListener('click', () => {
                 console.log("Restart button clicked. Resetting game...");
                 aidesGame.resetGame(); // Ra lệnh cho cỗ máy bắt đầu lại
             });
         }
-
-        // 5. Thêm Joystick cho Mobile
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            const joystickContainer = document.getElementById('joystick-container');
-            if (joystickContainer) {
-                const joystickOptions = {
-                    zone: joystickContainer,
-                    mode: 'dynamic',
-                    color: 'white',
-                    size: 100
-                };
-                const manager = nipplejs.create(joystickOptions);
-
-                manager.on('move', (evt, data) => {
-                    if (data.vector) {
-                        aidesGame.joystickDirection.set(data.vector.x, 0, -data.vector.y);
-                    }
-                });
-
-                manager.on('end', () => {
-                    aidesGame.joystickDirection.set(0, 0, 0);
-                });
-            }
-        }
-
-       // 6. Thêm nút Toàn màn hình cho Mobile (Phiên bản ổn định nhất)
-        if (fullscreenButton) {
-            fullscreenButton.addEventListener('click', () => {
-                // Lấy đúng phần tử #game-container thay vì cả trang
-                const gameContainerElement = document.getElementById('game-container');
-                if (!gameContainerElement) return;
-
-                // Kiểm tra xem đã ở chế độ toàn màn hình chưa
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    console.log("Chưa ở chế độ toàn màn hình. Yêu cầu vào...");
-                    // --- VÀO CHẾ ĐỘ TOÀN MÀN HÌNH ---
-                    const requestFullscreen = gameContainerElement.requestFullscreen || gameContainerElement.webkitRequestFullscreen;
-                    if (requestFullscreen) {
-                        requestFullscreen.call(gameContainerElement);
-                    }
-                } else {
-                    console.log("Đang ở chế độ toàn màn hình. Yêu cầu thoát...");
-                    // --- THOÁT CHẾ ĐỘ TOÀN MÀN HÌNH ---
-                    const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
-                    if (exitFullscreen) {
-                        exitFullscreen.call(document);
-                    }
-                }
-            });
-
-            // Lắng nghe sự kiện thay đổi trạng thái fullscreen để thêm/xóa class
-            document.addEventListener('fullscreenchange', handleFullscreenChange);
-            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-
-            function handleFullscreenChange() {
-                // Dùng class trên body để dễ dàng style bằng CSS
-                if (document.fullscreenElement || document.webkitFullscreenElement) {
-                    document.body.classList.add('is-fullscreen');
-                    console.log("Sự kiện: Đã vào chế độ toàn màn hình.");
-                } else {
-                    document.body.classList.remove('is-fullscreen');
-                    console.log("Sự kiện: Đã thoát chế độ toàn màn hình.");
-                }
-            }
-        }
-
-        // 7. Thêm nút Tải Log
         if (downloadButton) {
             downloadButton.addEventListener('click', () => {
                 if (aidesGame) {
