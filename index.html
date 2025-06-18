@@ -662,6 +662,12 @@
     </div>
 
     <script>
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
         const preloader = document.getElementById('preloader');
         const loaderText = document.getElementById('loader-text');
         const textToType = "INITIALIZING SYSTEM...";
