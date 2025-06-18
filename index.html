@@ -12,9 +12,11 @@
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
         :root {
-            --primary-color: #00ff41;
+            --primary-color: #00ff7f;
+            --accent-color: #adffd8;
             --dark-bg: #000000;
             --text-light: #cccccc;
+            --text-white: #FFFFFF;
             --text-dark: #888888;
         }
 
@@ -47,7 +49,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
         }
 
         .preloader.hidden {
@@ -55,23 +57,12 @@
             visibility: hidden;
         }
 
-        .loader-text {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            text-transform: uppercase;
-        }
-
-        .loader-text::after {
-            content: '_';
-            animation: blink 0.7s infinite;
-            font-weight: bold;
-        }
-
-        @keyframes blink {
-            50% {
-                opacity: 0;
-            }
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         #three-container {
@@ -80,7 +71,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: -1;
         }
 
         .scanlines {
@@ -89,7 +80,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(transparent 50%, rgba(0, 255, 65, 0.03) 50%);
+            background: linear-gradient(transparent 50%, rgba(0, 255, 127, 0.03) 50%);
             background-size: 100% 4px;
             z-index: 2;
             pointer-events: none;
@@ -101,8 +92,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 255, 127, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 127, 0.1) 1px, transparent 1px);
             background-size: 50px 50px;
             z-index: 2;
             pointer-events: none;
@@ -117,7 +108,6 @@
             align-items: center;
             min-height: 100vh;
             padding: 40px;
-            backdrop-filter: blur(1px);
             width: 100%;
         }
 
@@ -225,14 +215,14 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 4.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #00cc33 50%, var(--primary-color) 100%);
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 50%, var(--accent-color) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 20px;
             position: relative;
             animation: glow 2s ease-in-out infinite alternate;
-            text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+            text-shadow: 0 0 30px var(--primary-color);
         }
 
         .system-status {
@@ -241,13 +231,9 @@
             color: var(--primary-color);
             position: relative;
             padding: 15px 30px;
-            border: 1px solid rgba(0, 255, 65, 0.3);
+            border: 1px solid rgba(0, 255, 127, 0.3);
             border-radius: 8px;
-            /* Tắt backdrop-filter, thay bằng background rắn */
-            background: rgba(0, 255, 65, 0.1);
-            /* Màu nền thay thế */
-            /* backdrop-filter: blur(10px); */
-            /* Comment dòng này */
+            background: rgba(0, 255, 127, 0.1);
             align-self: flex-start;
         }
 
@@ -343,8 +329,8 @@
         }
 
         .tech-card {
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px solid rgba(0, 255, 65, 0.2);
+            background: rgba(0, 255, 127, 0.15);
+            border: 1px solid rgba(0, 255, 127, 0.2);
             border-radius: 12px;
             padding: 25px;
             backdrop-filter: blur(10px);
@@ -354,9 +340,9 @@
         }
 
         .tech-card:hover {
-            border-color: rgba(0, 255, 65, 0.5);
+            border-color: rgba(0, 255, 127, 0.5);
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 255, 127, 0.2);
         }
 
         .tech-icon {
@@ -364,25 +350,27 @@
             font-size: 2rem;
             color: var(--primary-color);
             margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.5));
+            filter: drop-shadow(0 0 10px var(--primary-color));
         }
 
         .tech-title {
             font-family: 'JetBrains Mono', monospace;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 700;
             margin-bottom: 8px;
+            color: var(--text-white);
         }
 
         .tech-desc {
             font-size: 0.9rem;
-            color: var(--text-dark);
+            color: var(--text-white);
+            font-style: italic;
             line-height: 1.5;
         }
 
         .status-panel {
             background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 65, 0.3);
+            border: 1px solid rgba(0, 255, 127, 0.3);
             border-radius: 15px;
             padding: 30px;
             backdrop-filter: blur(20px);
@@ -407,7 +395,7 @@
             border-radius: 50%;
             margin-right: 15px;
             animation: pulse 1.5s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+            box-shadow: 0 0 20px var(--primary-color);
         }
 
         .status-text {
@@ -439,15 +427,15 @@
             border-radius: 6px;
             overflow: hidden;
             margin-bottom: 20px;
-            border: 1px solid rgba(0, 255, 65, 0.2);
+            border: 1px solid rgba(0, 255, 127, 0.2);
         }
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), #00cc33, var(--primary-color));
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color), var(--accent-color));
             border-radius: 6px;
             animation: progress-flow 4s ease-in-out infinite;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+            box-shadow: 0 0 20px var(--primary-color);
         }
 
         .time-info {
@@ -466,7 +454,7 @@
 
         .contact-panel {
             background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(0, 255, 65, 0.2);
+            border: 1px solid rgba(0, 255, 127, 0.2);
             border-radius: 10px;
             padding: 20px;
             backdrop-filter: blur(10px);
@@ -493,16 +481,16 @@
 
         .contact-info a:hover {
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+            text-shadow: 0 0 10px var(--primary-color);
         }
 
         @keyframes glow {
             0% {
-                filter: drop-shadow(0 0 20px rgba(0, 255, 65, 0.5));
+                filter: drop-shadow(0 0 20px var(--primary-color));
             }
 
             100% {
-                filter: drop-shadow(0 0 40px rgba(0, 255, 65, 0.8));
+                filter: drop-shadow(0 0 40px var(--accent-color));
             }
         }
 
@@ -534,7 +522,6 @@
             }
         }
 
-        /* Responsive Design */
         @media (max-width: 992px) {
             .content-wrapper {
                 flex-direction: column;
@@ -553,7 +540,6 @@
                 text-align: center;
             }
 
-            /* SỬA LỖI LỆCH TRÊN MOBILE */
             .system-status {
                 align-self: center;
             }
@@ -581,12 +567,12 @@
 
 <body>
     <div class="preloader" id="preloader">
-        <div class="loader-text" id="loader-text"></div>
+        <canvas id="matrix-canvas"></canvas>
     </div>
 
     <div id="three-container"></div>
     <div class="scanlines"></div>
-    <div class="grid-overlay"></div>
+    <div class.grid-overlay"></div>
 
     <div class="main-content">
         <div class="content-wrapper">
@@ -665,27 +651,154 @@
     </div>
 
     <script>
-        function setViewportHeight() {
-            let vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-        setViewportHeight();
-        window.addEventListener('resize', setViewportHeight);
+        // ----- GLOBAL VARIABLES -----
         const preloader = document.getElementById('preloader');
-        const loaderText = document.getElementById('loader-text');
-        const textToType = "INITIALIZING SYSTEM...";
+        const matrixCanvas = document.getElementById('matrix-canvas');
+        const ctx = matrixCanvas.getContext('2d');
 
-        function typeWriter(element, text, i) {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
-                setTimeout(() => typeWriter(element, text, i + 1), 100);
+        let preloaderPhase = 'matrix_rain';
+        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
+        let fontSize = 14;
+        let logoFontSize = 150;
+        let columns, drops;
+        let particles = [];
+        let bitParticles = [];
+        let targetPositions = [];
+
+        // Main Background 3D Scene
+        let scene, camera, renderer, gear, glowMesh;
+
+        // ----- PRELOADER LOGIC (2D Canvas) -----
+
+        function initPreloader() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            particles = [];
+            bitParticles = [];
+            targetPositions = [];
+            columns = Math.floor(matrixCanvas.width / fontSize);
+            drops = Array(columns).fill(1).map(() => Math.random() * matrixCanvas.height);
+        }
+
+        // CẬP NHẬT 8: Hàm helper để vẽ chữ AIDES một cách nhất quán
+        function drawAidesText(color, shadowColor, shadowBlur) {
+            ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = color;
+            if (shadowColor && shadowBlur) {
+                ctx.shadowColor = shadowColor;
+                ctx.shadowBlur = shadowBlur;
+            }
+
+            // Vẽ từng ký tự tại vị trí chính xác của nó
+            particles.forEach(p => {
+                ctx.fillText(p.char, targetPositions[p.index].x, targetPositions[p.index].y);
+            });
+            ctx.shadowBlur = 0; // Reset shadow
+        }
+
+
+        function initBitDissolve() {
+            ctx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            drawAidesText('white'); // Vẽ chữ màu trắng để lấy data pixel rõ nhất
+
+            const imageData = ctx.getImageData(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+            bitParticles = [];
+            for (let y = 0; y < imageData.height; y += 6) {
+                for (let x = 0; x < imageData.width; x += 6) {
+                    const alpha = imageData.data[(y * imageData.width + x) * 4 + 3];
+                    if (alpha > 0) {
+                        bitParticles.push({
+                            x: x,
+                            y: y,
+                            vx: (Math.random() - 0.5) * 1.5,
+                            vy: Math.random() * -2 - 1,
+                            char: Math.random() > 0.5 ? '0' : '1',
+                            opacity: 1,
+                            gravity: 0.1
+                        });
+                    }
+                }
             }
         }
-        typeWriter(loaderText, textToType, 0);
 
-        let scene, camera, renderer;
+        function updatePreloaderAnimation() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
 
-        function initThreeJS() {
+            switch (preloaderPhase) {
+                case 'matrix_rain':
+                    ctx.fillStyle = 'rgba(0, 255, 127, 0.5)';
+                    ctx.font = `${fontSize}px "JetBrains Mono"`;
+                    ctx.textAlign = 'start'; // Reset alignment cho cơn mưa
+                    ctx.textBaseline = 'alphabetic';
+                    for (let i = 0; i < drops.length; i++) {
+                        const text = chars[Math.floor(Math.random() * chars.length)];
+                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                        if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                            drops[i] = 0;
+                        }
+                        drops[i]++;
+                    }
+                    break;
+
+                case 'forming_text':
+                    let allReached = true;
+                    ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
+                    ctx.textAlign = 'center'; // Căn giữa cho nhất quán
+                    ctx.textBaseline = 'middle';
+
+                    particles.forEach(p => {
+                        const dx = targetPositions[p.index].x - p.x;
+                        const dy = targetPositions[p.index].y - p.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist > 1) {
+                            allReached = false;
+                            p.x += dx * 0.08;
+                            p.y += dy * 0.08;
+                        }
+                        ctx.fillStyle = `rgba(173, 255, 216, ${p.opacity})`;
+                        ctx.fillText(p.char, p.x, p.y);
+                    });
+
+                    if (allReached) {
+                        preloaderPhase = 'holding_text';
+                    }
+                    break;
+
+                case 'holding_text':
+                    drawAidesText('var(--accent-color)', 'var(--primary-color)', 15);
+                    break;
+
+                case 'dissolving_into_bits':
+                    let allFaded = true;
+                    ctx.font = `bold 12px "JetBrains Mono"`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    bitParticles.forEach(p => {
+                        if (p.opacity > 0) {
+                            allFaded = false;
+                            p.vy += p.gravity;
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            p.opacity -= 0.01;
+                            ctx.fillStyle = `rgba(0, 255, 127, ${p.opacity})`;
+                            ctx.fillText(p.char, p.x, p.y);
+                        }
+                    });
+                    if (allFaded) {
+                        preloaderPhase = 'finished';
+                    }
+                    break;
+            }
+        }
+
+        // ----- MAIN BACKGROUND SCENE LOGIC -----
+
+        function initMainScene() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -693,32 +806,30 @@
             renderer.setClearColor(0x000000, 0);
             document.getElementById('three-container').appendChild(renderer.domElement);
 
-            createParticleField(150);
-            createFloatingGeometry(6);
+            createParticleField(200);
+            createFloatingGeometry(8);
+            createGear();
 
             camera.position.z = 20;
-
-            animate();
-            window.addEventListener('resize', onWindowResize);
         }
 
         function createParticleField(count) {
             const positions = new Float32Array(count * 3);
             for (let i = 0; i < count; i++) {
-                positions[i * 3] = (Math.random() - 0.5) * 50;
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+                positions[i * 3] = (Math.random() - 0.5) * 60;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
             }
             const geometry = new THREE.BufferGeometry();
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const material = new THREE.PointsMaterial({ size: 0.15, color: 0x00ff41, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+            const material = new THREE.PointsMaterial({ size: 0.2, color: 0x00ff7f, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending });
             scene.add(new THREE.Points(geometry, material));
         }
 
         function createFloatingGeometry(count) {
             for (let i = 0; i < count; i++) {
                 const geometry = new THREE.BoxGeometry(2, 2, 2);
-                const material = new THREE.MeshBasicMaterial({ color: 0x00ff41, wireframe: true, transparent: true, opacity: 0.15 });
+                const material = new THREE.MeshBasicMaterial({ color: 0x00ff7f, wireframe: true, transparent: true, opacity: 0.2 });
                 const cube = new THREE.Mesh(geometry, material);
                 cube.position.set((Math.random() - 0.5) * 40, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 30);
                 cube.userData.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01);
@@ -726,30 +837,138 @@
             }
         }
 
+        function createGear() {
+            const gearShape = new THREE.Shape();
+            const teeth = 14; const outerRadius = 2.5; const innerRadius = 1.8; const toothHeight = 0.6;
+            for (let i = 0; i < teeth; i++) {
+                let angle = (i / teeth) * Math.PI * 2;
+                gearShape.moveTo(Math.cos(angle) * innerRadius, Math.sin(angle) * innerRadius);
+                gearShape.lineTo(Math.cos(angle) * (outerRadius), Math.sin(angle) * (outerRadius));
+                angle += (1 / teeth) * Math.PI * 2 * 0.25;
+                gearShape.lineTo(Math.cos(angle) * (outerRadius), Math.sin(angle) * (outerRadius));
+                gearShape.lineTo(Math.cos(angle) * (outerRadius + toothHeight), Math.sin(angle) * (outerRadius + toothHeight));
+                angle += (1 / teeth) * Math.PI * 2 * 0.25;
+                gearShape.lineTo(Math.cos(angle) * (outerRadius + toothHeight), Math.sin(angle) * (outerRadius + toothHeight));
+                gearShape.lineTo(Math.cos(angle) * (outerRadius), Math.sin(angle) * (outerRadius));
+                angle += (1 / teeth) * Math.PI * 2 * 0.25;
+                gearShape.lineTo(Math.cos(angle) * (outerRadius), Math.sin(angle) * (outerRadius));
+                gearShape.lineTo(Math.cos(angle) * innerRadius, Math.sin(angle) * innerRadius);
+            }
+
+            const extrudeSettings = { depth: 0.8, bevelEnabled: true, bevelThickness: 0.1, bevelSize: 0.1, bevelSegments: 2 };
+            const gearGeometry = new THREE.ExtrudeGeometry(gearShape, extrudeSettings);
+
+            const gearMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff7f, wireframe: true, transparent: true, opacity: 0.6 });
+            gear = new THREE.Mesh(gearGeometry, gearMaterial);
+            const glowMaterial = new THREE.MeshBasicMaterial({ color: 0xadffd8, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending });
+            glowMesh = new THREE.Mesh(gearGeometry, glowMaterial);
+
+            gear.position.set(0, 0, -80); gear.scale.set(0.1, 0.1, 0.1);
+            gear.userData.targetPosition = new THREE.Vector3(0, 0, 0);
+            gear.userData.targetScale = new THREE.Vector3(3, 3, 3);
+            gear.userData.isAnimating = true;
+            glowMesh.position.copy(gear.position); glowMesh.scale.copy(gear.scale);
+            scene.add(gear); scene.add(glowMesh);
+        }
+
+        // ----- MAIN ANIMATION LOOP -----
+
         function animate() {
-            requestAnimationFrame(animate);
+            if (preloaderPhase !== 'finished') {
+                updatePreloaderAnimation();
+            } else {
+                if (!preloader.classList.contains('hidden')) {
+                    preloader.classList.add('hidden');
+                }
+            }
+
+            // --- Background Animation Logic ---
+            if (gear && gear.userData.isAnimating) {
+                gear.position.lerp(gear.userData.targetPosition, 0.025);
+                gear.scale.lerp(gear.userData.targetScale, 0.025);
+                if (gear.position.distanceTo(gear.userData.targetPosition) < 0.1) {
+                    gear.userData.isAnimating = false;
+                    gear.position.copy(gear.userData.targetPosition); gear.scale.copy(gear.userData.targetScale);
+                }
+            }
+            if (gear) {
+                gear.rotation.z += 0.003; gear.rotation.x += 0.001;
+                glowMesh.position.copy(gear.position); glowMesh.scale.copy(gear.scale); glowMesh.rotation.copy(gear.rotation);
+            }
             scene.children.forEach(child => {
-                if (child.isMesh) {
-                    child.rotation.x += child.userData.velocity.x;
-                    child.rotation.y += child.userData.velocity.y;
+                if (child.userData.velocity) {
+                    child.position.add(child.userData.velocity);
+                    child.rotation.z += child.userData.velocity.z * 0.5;
+                    child.rotation.y += child.userData.velocity.y * 0.5;
+                    if (Math.abs(child.position.x) > 30) child.userData.velocity.x *= -1;
+                    if (Math.abs(child.position.y) > 30) child.userData.velocity.y *= -1;
+                    if (Math.abs(child.position.z) > 20) child.userData.velocity.z *= -1;
                 }
             });
             renderer.render(scene, camera);
+
+            requestAnimationFrame(animate);
         }
+
+        // ----- INITIALIZATION -----
 
         function onWindowResize() {
-            if (camera && renderer) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+
+            if (preloaderPhase !== 'finished') {
+                initPreloader();
             }
         }
+        window.addEventListener('resize', onWindowResize);
 
         window.addEventListener('load', () => {
-            initThreeJS();
+            initPreloader();
+            initMainScene();
+
+            const text = 'AIDES';
+            ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const totalTextWidth = ctx.measureText(text).width;
+            const startX = (matrixCanvas.width - totalTextWidth) / 2;
+            const startY = matrixCanvas.height / 2; // Căn giữa tuyệt đối theo chiều dọc
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const prevCharsWidth = ctx.measureText(text.slice(0, i)).width;
+                const charWidth = ctx.measureText(char).width;
+
+                const x = startX + prevCharsWidth + (charWidth / 2);
+                targetPositions.push({ x: x, y: startY });
+
+                particles.push({
+                    char: char,
+                    x: Math.random() * matrixCanvas.width,
+                    y: Math.random() * matrixCanvas.height,
+                    opacity: 1,
+                    index: i
+                });
+            }
+
+            animate(); // Bắt đầu animation ngay lập tức
+
             setTimeout(() => {
-                preloader.classList.add('hidden');
-            }, textToType.length * 100 + 500);
+                if (preloaderPhase === 'matrix_rain') {
+                    preloaderPhase = 'forming_text';
+                }
+            }, 2500);
+
+            setTimeout(() => {
+                if (preloaderPhase !== 'finished') {
+                    initBitDissolve();
+                    preloaderPhase = 'dissolving_into_bits';
+                }
+            }, 5500);
         });
     </script>
 </body>
