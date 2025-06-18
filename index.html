@@ -572,7 +572,7 @@
 
     <div id="three-container"></div>
     <div class="scanlines"></div>
-    <div class.grid-overlay"></div>
+    <div class="grid-overlay"></div>
 
     <div class="main-content">
         <div class="content-wrapper">
@@ -651,36 +651,62 @@
     </div>
 
     <script>
-        // ----- GLOBAL VARIABLES -----
         const preloader = document.getElementById('preloader');
         const matrixCanvas = document.getElementById('matrix-canvas');
         const ctx = matrixCanvas.getContext('2d');
 
         let preloaderPhase = 'matrix_rain';
         let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()'.split('');
-        let fontSize = 14;
-        let logoFontSize = 150;
+        let fontSize = 12;
+        let logoFontSize;
         let columns, drops;
         let particles = [];
         let bitParticles = [];
         let targetPositions = [];
 
-        // Main Background 3D Scene
         let scene, camera, renderer, gear, glowMesh;
 
-        // ----- PRELOADER LOGIC (2D Canvas) -----
+        function calculateAidesLayout() {
+            particles = [];
+            targetPositions = [];
+            logoFontSize = window.innerWidth < 768 ? 90 : 150;
+
+            const text = 'AIDES';
+            ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const totalTextWidth = ctx.measureText(text).width;
+            const startX = (matrixCanvas.width - totalTextWidth) / 2;
+            const startY = matrixCanvas.height / 2;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const prevCharsWidth = ctx.measureText(text.slice(0, i)).width;
+                const charWidth = ctx.measureText(char).width;
+
+                const x = startX + prevCharsWidth + (charWidth / 2);
+                targetPositions.push({ x: x, y: startY });
+
+                particles.push({
+                    char: char,
+                    x: Math.random() * matrixCanvas.width,
+                    y: Math.random() * matrixCanvas.height,
+                    opacity: 1,
+                    index: i
+                });
+            }
+        }
 
         function initPreloader() {
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
-            particles = [];
             bitParticles = [];
-            targetPositions = [];
             columns = Math.floor(matrixCanvas.width / fontSize);
             drops = Array(columns).fill(1).map(() => Math.random() * matrixCanvas.height);
+            calculateAidesLayout();
         }
 
-        // CẬP NHẬT 8: Hàm helper để vẽ chữ AIDES một cách nhất quán
         function drawAidesText(color, shadowColor, shadowBlur) {
             ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
             ctx.textAlign = 'center';
@@ -691,17 +717,15 @@
                 ctx.shadowBlur = shadowBlur;
             }
 
-            // Vẽ từng ký tự tại vị trí chính xác của nó
             particles.forEach(p => {
                 ctx.fillText(p.char, targetPositions[p.index].x, targetPositions[p.index].y);
             });
-            ctx.shadowBlur = 0; // Reset shadow
+            ctx.shadowBlur = 0;
         }
-
 
         function initBitDissolve() {
             ctx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-            drawAidesText('white'); // Vẽ chữ màu trắng để lấy data pixel rõ nhất
+            drawAidesText('white');
 
             const imageData = ctx.getImageData(0, 0, matrixCanvas.width, matrixCanvas.height);
 
@@ -725,19 +749,19 @@
         }
 
         function updatePreloaderAnimation() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
             ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
 
             switch (preloaderPhase) {
                 case 'matrix_rain':
-                    ctx.fillStyle = 'rgba(0, 255, 127, 0.5)';
+                    ctx.fillStyle = 'rgba(0, 255, 127, 0.7)';
                     ctx.font = `${fontSize}px "JetBrains Mono"`;
-                    ctx.textAlign = 'start'; // Reset alignment cho cơn mưa
+                    ctx.textAlign = 'start';
                     ctx.textBaseline = 'alphabetic';
                     for (let i = 0; i < drops.length; i++) {
                         const text = chars[Math.floor(Math.random() * chars.length)];
                         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                        if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.96) {
                             drops[i] = 0;
                         }
                         drops[i]++;
@@ -747,7 +771,7 @@
                 case 'forming_text':
                     let allReached = true;
                     ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
-                    ctx.textAlign = 'center'; // Căn giữa cho nhất quán
+                    ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
 
                     particles.forEach(p => {
@@ -795,8 +819,6 @@
                     break;
             }
         }
-
-        // ----- MAIN BACKGROUND SCENE LOGIC -----
 
         function initMainScene() {
             scene = new THREE.Scene();
@@ -871,8 +893,6 @@
             scene.add(gear); scene.add(glowMesh);
         }
 
-        // ----- MAIN ANIMATION LOOP -----
-
         function animate() {
             if (preloaderPhase !== 'finished') {
                 updatePreloaderAnimation();
@@ -882,7 +902,6 @@
                 }
             }
 
-            // --- Background Animation Logic ---
             if (gear && gear.userData.isAnimating) {
                 gear.position.lerp(gear.userData.targetPosition, 0.025);
                 gear.scale.lerp(gear.userData.targetScale, 0.025);
@@ -910,8 +929,6 @@
             requestAnimationFrame(animate);
         }
 
-        // ----- INITIALIZATION -----
-
         function onWindowResize() {
             const width = window.innerWidth;
             const height = window.innerHeight;
@@ -928,34 +945,7 @@
         window.addEventListener('load', () => {
             initPreloader();
             initMainScene();
-
-            const text = 'AIDES';
-            ctx.font = `bold ${logoFontSize}px "JetBrains Mono"`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            const totalTextWidth = ctx.measureText(text).width;
-            const startX = (matrixCanvas.width - totalTextWidth) / 2;
-            const startY = matrixCanvas.height / 2; // Căn giữa tuyệt đối theo chiều dọc
-
-            for (let i = 0; i < text.length; i++) {
-                const char = text[i];
-                const prevCharsWidth = ctx.measureText(text.slice(0, i)).width;
-                const charWidth = ctx.measureText(char).width;
-
-                const x = startX + prevCharsWidth + (charWidth / 2);
-                targetPositions.push({ x: x, y: startY });
-
-                particles.push({
-                    char: char,
-                    x: Math.random() * matrixCanvas.width,
-                    y: Math.random() * matrixCanvas.height,
-                    opacity: 1,
-                    index: i
-                });
-            }
-
-            animate(); // Bắt đầu animation ngay lập tức
+            animate();
 
             setTimeout(() => {
                 if (preloaderPhase === 'matrix_rain') {
