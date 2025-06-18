@@ -1,166 +1,748 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDES - Endless Creativity</title>
-    <link rel="stylesheet" href="style.css">
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>AIDES</text></svg>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #00ff41;
+            --dark-bg: #000000;
+            --text-light: #cccccc;
+            --text-dark: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .loader-text::after {
+            content: '_';
+            animation: blink 0.7s infinite;
+            font-weight: bold;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        #three-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 50%, rgba(0, 255, 65, 0.03) 50%);
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            backdrop-filter: blur(1px);
+            width: 100%;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 50px;
+            width: 100%;
+            max-width: 1400px;
+            align-items: flex-start;
+        }
+
+        .left-column,
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .left-column {
+            flex: 1 1 45%;
+        }
+
+        .right-column {
+            flex: 1 1 55%;
+        }
+
+        .header-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .company-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .company-logo::before,
+        .company-logo::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            overflow: hidden;
+        }
+
+        .company-logo::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+        }
+
+        .company-logo::after {
+            left: -2px;
+            text-shadow: -1px 0 cyan;
+            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+
+            0%,
+            10%,
+            12%,
+            80%,
+            82%,
+            100% {
+                clip-path: inset(0 0 95% 0);
+            }
+
+            40%,
+            42% {
+                clip-path: inset(40% 0 55% 0);
+            }
+        }
+
+        @keyframes glitch-anim-2 {
+
+            0%,
+            2%,
+            4%,
+            50%,
+            52%,
+            90%,
+            92%,
+            100% {
+                clip-path: inset(90% 0 5% 0);
+            }
+
+            25%,
+            27% {
+                clip-path: inset(10% 0 80% 0);
+            }
+        }
+
+        .main-logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #00cc33 50%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            position: relative;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        }
+
+        .system-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            position: relative;
+            padding: 15px 30px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 255, 65, 0.05);
+            backdrop-filter: blur(10px);
+            align-self: flex-start;
+        }
+
+        .system-status-corners::before,
+        .system-status-corners::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-color: var(--primary-color);
+            border-style: solid;
+            animation: pulse-corners 2s infinite;
+        }
+
+        .system-status-corners::before {
+            top: -5px;
+            left: -5px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .system-status-corners::after {
+            top: -5px;
+            right: -5px;
+            border-width: 2px 2px 0 0;
+        }
+
+        .system-status-corners span::before,
+        .system-status-corners span::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-color: var(--primary-color);
+            border-style: solid;
+            animation: pulse-corners 2s infinite;
+        }
+
+        .system-status-corners span::before {
+            bottom: -5px;
+            left: -5px;
+            border-width: 0 0 2px 2px;
+        }
+
+        .system-status-corners span::after {
+            bottom: -5px;
+            right: -5px;
+            border-width: 0 2px 2px 0;
+        }
+
+        @keyframes pulse-corners {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .maintenance-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            width: 100%;
+        }
+
+        .maintenance-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--text-light) 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .maintenance-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .tech-card {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card:hover {
+            border-color: rgba(0, 255, 65, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
+        }
+
+        .tech-icon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 65, 0.5));
+        }
+
+        .tech-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .tech-desc {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .status-panel {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .status-indicator {
+            width: 14px;
+            height: 14px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin-right: 15px;
+            animation: pulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+        }
+
+        .status-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .progress-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .progress-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #00cc33, var(--primary-color));
+            border-radius: 6px;
+            animation: progress-flow 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .footer-section {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .contact-panel {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .contact-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .contact-info {
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        .contact-info a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+        }
+
+        @keyframes glow {
+            0% {
+                filter: drop-shadow(0 0 20px rgba(0, 255, 65, 0.5));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 40px rgba(0, 255, 65, 0.8));
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes progress-flow {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 85%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .content-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .left-column,
+            .right-column {
+                width: 100%;
+                max-width: 550px;
+            }
+
+            .header-section,
+            .maintenance-container {
+                align-items: center;
+                text-align: center;
+            }
+
+            /* SỬA LỖI LỆCH TRÊN MOBILE */
+            .system-status {
+                align-self: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .main-logo {
+                font-size: 3rem;
+            }
+
+            .maintenance-title {
+                font-size: 2.2rem;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="loader">
-        <div class="loader-text">AIDES LOADING</div>
-        <div class="progress-bar"></div>
+    <div class="preloader" id="preloader">
+        <div class="loader-text" id="loader-text"></div>
     </div>
 
-    <section class="hero-section">
-        <div class="hero-content">
-            <div class="logo-phase" data-aos="fade-up">
-                <h1 class="logo-heading">AIDES</h1>
-                <p class="logo-subtitle">Endless Creativity</p>
-            </div>
+    <div id="three-container"></div>
+    <div class="scanlines"></div>
+    <div class="grid-overlay"></div>
 
-            <div class="social-phase" data-aos="fade-up" data-aos-delay="200">
-                <div class="social-buttons">
-                    <a href="https://www.facebook.com/people/Aides-Game-VN/61564920160083/"
-                        class="social-button facebook-button">
-                        <img src="facebook-icon.png" alt="Facebook" class="social-icon">
-                        Facebook
-                    </a>
-                    <a href="https://www.instagram.com/aides.vn" class="social-button instagram-button">
-                        <img src="Instagram-icon.png" alt="Instagram" class="social-icon">
-                        Instagram
-                    </a>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <div class="left-column">
+                <div class="header-section">
+                    <div class="company-logo" data-text="AIDES">AIDES</div>
+                    <div class="main-logo">AIDESHUB</div>
+                    <div class="system-status">
+                        <div class="system-status-corners"><span></span>SYSTEM UPGRADE IN PROGRESS</div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="coming-soon-phase" data-aos="fade-up" data-aos-delay="400">
-                <div class="coming-soon-container">
-                    <div class="coming-soon-text">
-                        <span class="coming-text">COMING</span>
-                        <span class="soon-text">SOON</span>
-                    </div>
-                    <div class="countdown-container">
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="days">00</span>
-                            <span class="countdown-label">Days</span>
+                <div class="maintenance-container">
+                    <h1 class="maintenance-title">Triển Khai Nâng Cấp Lõi Hệ Thống</h1>
+                    <p class="maintenance-description">
+                        Chúng tôi đang tích hợp các module mới và tối ưu hóa kiến trúc lõi để mang lại hiệu năng vượt
+                        trội.
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <div class="contact-panel">
+                        <div class="contact-title">Technical Support</div>
+                        <div class="contact-info">
+                            Emergency: <a href="mailto:support@aideshub.com">support@aideshub.com</a> |
+                            Status: <a
+                                href="https://web.facebook.com/people/Aides-Game-VN/61564920160083/?_rdc=1&_rdr#">Facebook</a>
                         </div>
-                        <span class="countdown-separator">:</span>
-
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="hours">00</span>
-                            <span class="countdown-label">Hours</span>
-                        </div>
-                        <span class="countdown-separator">:</span>
-
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="minutes">00</span>
-                            <span class="countdown-label">Mins</span>
-                        </div>
-                        <span class="countdown-separator">:</span>
-
-                        <div class="countdown-item">
-                            <span class="countdown-number" id="seconds">00</span>
-                            <span class="countdown-label">Secs</span>
-                        </div>
-                    </div>
-
-                    <div class="game-title">
-                        <span class="game-name">CELESTIAL HOP : </span>
-                        <span class="game-subtitle">Echoes of Ash, Seed of Light</span>
                     </div>
                 </div>
             </div>
 
-            <div id="game-section" data-aos="fade-up" data-aos-delay="600">
-                <h2 class="game-section-title">MINI TEST GAME PLAY</h2>
-
-                <div id="game-container">
-                    <div id="game-ui">
-                        <div id="score">Score: 0</div>
-                        <div id="info">Sử dụng WASD hoặc phím mũi tên để di chuyển</div>
+            <div class="right-column">
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-icon">[G]</div>
+                        <div class="tech-title">GAME MENU INTEGRATION</div>
+                        <div class="tech-desc">Tích hợp Game Menu mới, cung cấp giao diện điều khiển và tương tác tập
+                            trung.</div>
                     </div>
-                    <div id="start-screen">
-                        <div class="start-content">
-                            <h1>AIDES</h1>
-                            <p>Survive as long as you can.</p>
-                            <button id="start-button">PLAY</button>
+                    <div class="tech-card">
+                        <div class="tech-icon">[CE]</div>
+                        <div class="tech-title">CERBERUS ENGINE R&D</div>
+                        <div class="tech-desc">Triển khai môi trường R&D cho Cerberus Engine trực tiếp trên nền tảng
+                            web.</div>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">[⚡]</div>
+                        <div class="tech-title">PERFORMANCE OPTIMIZATION</div>
+                        <div class="tech-desc">Tối ưu hóa sâu hiệu năng hệ thống, giảm độ trễ và tăng tốc độ phản hồi.
                         </div>
                     </div>
-                    <div id="game-over-screen">
-                        <h2>GAME OVER</h2>
-                        <p id="final-score"></p>
-                        <button id="restart-button">RESTART</button>
-                        <button id="download-log-btn" title="DOWNLOAD TRAINING DATA"></button>
+                    <div class="tech-card">
+                        <div class="tech-icon">[/]</div>
+                        <div class="tech-title">UI/UX ENHANCEMENT</div>
+                        <div class="tech-desc">Nâng cấp giao diện người dùng, mang lại trải nghiệm trực quan và mượt mà
+                            hơn.</div>
                     </div>
-                    <div id="debug-console">
-                        <div class="console-header">AI MONITOR</div>
-                        <div id="console-content" class="console-content"></div>
+                </div>
+
+                <div class="status-panel">
+                    <div class="status-header">
+                        <div class="status-indicator"></div>
+                        <div class="status-text">Executing Upgrade Protocol</div>
+                    </div>
+                    <div class="progress-section">
+                        <div class="progress-label">System Deployment Progress</div>
+                        <div class="progress-container">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <div class="time-info"><span>ETA: 2-3 Days</span><span>Completion: 87%</span></div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <button id="feedback-btn" title="Gửi phản hồi">?</button>
-    <div id="feedback-wrapper" class="hidden">
-        <form id="feedback-form" action="https://formspree.io/f/xblygylq" method="POST">
-            <h3>Gửi Phản Hồi</h3>
-            <p>Ý kiến của bạn giúp game khi hoàn thiện sẽ tốt hơn!</p>
-            <p>Đây là tựa game nhỏ trong chuỗi game mini để test gameplay nhằm hoàn thiện sản phẩm cuối.</p>
-            <textarea name="message" placeholder="> Nhập ý kiến của bạn ở đây..." required></textarea>
-            <input type="email" name="_replyto" placeholder="> Email của bạn (không bắt buộc)">
-            <div class="form-buttons">
-                <button type="submit">Gửi</button>
-                <button type="button" id="close-feedback-btn">Đóng</button>
-            </div>
-        </form>
-
-        <div id="thank-you-screen" class="hidden">
-            <div class="matrix-scanline"></div>
-            <div class="robot-face">
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-                <div class="mouth"></div>
-            </div>
-            <pre id="thank-you-message"></pre> <button type="button" id="close-thank-you-btn">OK</button>
-        </div>
-    </div>
-    <div class="matrix" data-aos="fade-up" data-aos-delay="600">
-        <div class="matrix-item">
-            <span class="matrix-text"></span>
-        </div>
     </div>
 
-    <footer class="footer" data-aos="fade-up" data-aos-delay="800">
-        <p>AIDES™ – Break Limits. Build Legends.</p>
-        <p>© 2025 AIDES™. All rights reserved.</p>
+    <script>
+        const preloader = document.getElementById('preloader');
+        const loaderText = document.getElementById('loader-text');
+        const textToType = "INITIALIZING SYSTEM...";
 
-    </footer>
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+        function typeWriter(element, text, i) {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                setTimeout(() => typeWriter(element, text, i + 1), 100);
             }
         }
+        typeWriter(loaderText, textToType, 0);
+
+        let scene, camera, renderer;
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            document.getElementById('three-container').appendChild(renderer.domElement);
+
+            createParticleField(150);
+            createFloatingGeometry(6);
+
+            camera.position.z = 20;
+
+            animate();
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function createParticleField(count) {
+            const positions = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+            }
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({ size: 0.15, color: 0x00ff41, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+            scene.add(new THREE.Points(geometry, material));
+        }
+
+        function createFloatingGeometry(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.BoxGeometry(2, 2, 2);
+                const material = new THREE.MeshBasicMaterial({ color: 0x00ff41, wireframe: true, transparent: true, opacity: 0.15 });
+                const cube = new THREE.Mesh(geometry, material);
+                cube.position.set((Math.random() - 0.5) * 40, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 30);
+                cube.userData.velocity = new THREE.Vector3((Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01, (Math.random() - 0.5) * 0.01);
+                scene.add(cube);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            scene.children.forEach(child => {
+                if (child.isMesh) {
+                    child.rotation.x += child.userData.velocity.x;
+                    child.rotation.y += child.userData.velocity.y;
+                }
+            });
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            initThreeJS();
+            setTimeout(() => {
+                preloader.classList.add('hidden');
+            }, textToType.length * 100 + 500);
+        });
     </script>
-    <script type="module" src="scripts.js"></script>
-    <div id="joystick-container" style="position: fixed; left: 50px; bottom: 50px; z-index: 10;"></div>
 </body>
 
 </html>
