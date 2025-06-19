@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found - AIDES</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;AIDES&lt;/text&gt;&lt;/svg&gt;">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=JetBrains+Mono:wght@700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #00ff7f;
+            --accent-color: #adffd8;
+            --dark-bg: #000000;
+            --text-white: #FFFFFF;
+        }
+
+        body.error-state {
+            --primary-color: #ff3333;
+            --accent-color: #ff8566;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-white);
+            position: relative;
+            transition: --primary-color 1s, --accent-color 1s;
+        }
+
+        #three-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .scanlines,
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        .scanlines {
+            background: linear-gradient(transparent 50%, rgba(0, 255, 127, 0.03) 50%);
+            background-size: 100% 4px;
+        }
+
+        .grid-overlay {
+            background-image: linear-gradient(rgba(0, 255, 127, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 127, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.2;
+        }
+
+        body.error-state .scanlines,
+        body.error-state .grid-overlay {
+            opacity: 0;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease 0.5s;
+        }
+
+        body.error-state .main-content {
+            opacity: 1;
+        }
+
+        .error-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 40px;
+        }
+
+        .aides-title,
+        .error-code,
+        .return-button {
+            color: var(--primary-color);
+            transition: color 1s;
+        }
+
+        .aides-title {
+            font-family: 'Cinzel+Decorative', cursive;
+            font-size: 5.5rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            animation: aides-flicker 2s infinite alternate;
+            margin-bottom: -2.5rem;
+            z-index: 5;
+        }
+
+        .error-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .error-code::before,
+        .error-code::after {
+            content: '404';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            overflow: hidden;
+            transition: text-shadow 1s;
+        }
+
+        .error-code::before {
+            left: 4px;
+            text-shadow: -4px 0 var(--accent-color);
+            animation: glitch-anim-1 1.8s infinite linear alternate-reverse;
+        }
+
+        .error-code::after {
+            left: -4px;
+            text-shadow: 4px 0 var(--accent-color);
+            animation: glitch-anim-2 1.8s infinite linear alternate-reverse;
+        }
+
+        .return-button {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .return-button:hover {
+            background: var(--primary-color);
+            color: var(--dark-bg);
+        }
+
+        @keyframes aides-flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            40% {
+                opacity: 0.9;
+            }
+
+            80% {
+                opacity: 0.98;
+            }
+        }
+
+        @keyframes glitch-anim-1 {
+
+            0%,
+            100% {
+                clip-path: inset(2% 0 95% 0);
+            }
+
+            40% {
+                clip-path: inset(35% 0 60% 0);
+            }
+
+            70% {
+                clip-path: inset(75% 0 20% 0);
+            }
+        }
+
+        @keyframes glitch-anim-2 {
+
+            0%,
+            100% {
+                clip-path: inset(90% 0 5% 0);
+            }
+
+            30% {
+                clip-path: inset(15% 0 80% 0);
+            }
+
+            60% {
+                clip-path: inset(65% 0 30% 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scanlines"></div>
+    <div class="grid-overlay"></div>
+    <div id="three-container"></div>
+    <div class="main-content">
+        <div class="error-display">
+            <div class="aides-title">AIDES</div>
+            <div class="error-code">404</div>
+        </div>
+        <a href="https://aideshub.com/" class="return-button">Back to Home</a>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.144.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.144.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
